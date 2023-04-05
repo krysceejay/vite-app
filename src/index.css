@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+
+:root{
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  @apply bg-gray-100 text-text-color;
+}
+
+.container {
+  @apply max-w-[1400px] py-0 px-4 md:px-8 m-auto overflow-hidden;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+  -webkit-box-shadow: 0 0 0 30px #F5F6FA inset !important;
+}
+
+.auto-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
+}
+
+.auto-grid2 {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(126px, 1fr))
+}
+
+.auto-grid3 {
+display: grid;
+gap: 1rem;
+grid-template-columns: repeat(auto-fill, minmax(100px, 1fr))
+}
+
+@tailwind utilities;
