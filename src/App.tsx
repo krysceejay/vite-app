@@ -12,6 +12,12 @@ import ForgotPassword from './pages/auth/ForgotPassword'
 //Dashboard
 import Dashboard from './pages/dashboard'
 import Transfers from './pages/dashboard/transfers'
+import TransferDetails from './pages/dashboard/transfers/TransferDetails'
+import NewTransfer from './pages/dashboard/transfers/New'
+import Beneficiaries from './pages/dashboard/beneficiaries'
+import KYCDocuments from './pages/dashboard/kyc'
+import Messages from './pages/dashboard/messages'
+import Help from './pages/dashboard/help'
 
 
 
@@ -35,6 +41,12 @@ function App() {
       <Route element={<DashboardLayout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="transfers" element={<Transfers />} />
+        <Route path="transfers/:id" element={<TransferDetails />} />
+        <Route path="transfers/new" element={<NewTransfer />} />
+        <Route path="beneficiaries" element={<Beneficiaries />} />
+        <Route path="kyc" element={<KYCDocuments />} />
+        <Route path="messages" element={<Messages />} />
+        <Route path="help" element={<Help />} />
       </Route>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Login />} />

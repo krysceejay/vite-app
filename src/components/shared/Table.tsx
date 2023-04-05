@@ -67,7 +67,7 @@ export default function Table({ showSearch, pageName }: TableProps){
                         <h3>Paid out</h3>
                     </td>
                     <td className="p-4">
-                        <DetailsLink link="/dashboard/transfers/1" text="Details" isTable={true} />
+                        <DetailsLink link="/transfers/1" text="Details" isTable={true} />
                     </td>
                     </tr>
                     <tr className="text-left border-b border-b-[#F5F6FA]">
@@ -82,7 +82,7 @@ export default function Table({ showSearch, pageName }: TableProps){
                         <h3>Payment pending</h3>
                     </td>
                     <td className="p-4">
-                        <DetailsLink link="/dashboard/transfers/2" text="Details" isTable={true} />
+                        <DetailsLink link="/transfers/2" text="Details" isTable={true} />
                     </td>
                     </tr>
                     <tr className="text-left border-b border-b-[#F5F6FA]">
@@ -97,7 +97,7 @@ export default function Table({ showSearch, pageName }: TableProps){
                         <h3>KYC uploaded</h3>
                     </td>
                     <td className="p-4">
-                        <DetailsLink link="/dashboard/transfers/3" text="Details" isTable={true} />
+                        <DetailsLink link="/transfers/3" text="Details" isTable={true} />
                     </td>
                     </tr>
                     <tr className="text-left border-b border-b-[#F5F6FA]">
@@ -112,7 +112,7 @@ export default function Table({ showSearch, pageName }: TableProps){
                         <h3>KYC verified</h3>
                     </td>
                     <td className="p-4">
-                        <DetailsLink link="/dashboard/transfers/4" text="Details" isTable={true} />
+                        <DetailsLink link="/transfers/4" text="Details" isTable={true} />
                     </td>
                     </tr>
                     <tr className="text-left border-b border-b-[#F5F6FA]">
@@ -127,7 +127,7 @@ export default function Table({ showSearch, pageName }: TableProps){
                         <span>Payout in progress</span>
                     </td>
                     <td className="p-4">
-                        <DetailsLink link="/dashboard/transfers/5" text="Details" isTable={true} />
+                        <DetailsLink link="/transfers/5" text="Details" isTable={true} />
                     </td>
                     </tr>
                     <tr className="text-left border-b border-b-[#F5F6FA]">
@@ -142,7 +142,7 @@ export default function Table({ showSearch, pageName }: TableProps){
                         <h3>Paid out</h3>
                     </td>
                     <td className="p-4">
-                        <DetailsLink link="/dashboard/transfers/6" text="Details" isTable={true} />
+                        <DetailsLink link="/transfers/6" text="Details" isTable={true} />
                     </td>
                     </tr>
                 </tbody>

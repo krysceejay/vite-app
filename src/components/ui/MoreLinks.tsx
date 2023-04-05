@@ -15,7 +15,7 @@ export default function MoreLinks({ setIsOpen }: MoreLinks) {
             </svg>
           </div>
         </div>
-        <div className="auto-grid3 mt-4">
+        <ul className="auto-grid3 mt-4">
           <li className="">
             <DashboardNavLinks slug="/kyc">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 md:w-4 md:h-4">
@@ -40,7 +40,7 @@ export default function MoreLinks({ setIsOpen }: MoreLinks) {
               <h3 className="text-xs xl:text-sm">Help & Support</h3>
             </DashboardNavLinks>
           </li>
-        </div>
+        </ul>
       </div>
     </div>
   )
