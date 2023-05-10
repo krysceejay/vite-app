@@ -1,9 +1,16 @@
 
-import { Link, Outlet } from 'react-router-dom'
+import { useContext } from 'react'
+import { Link, Navigate, Outlet } from 'react-router-dom'
+import AuthContext, { IAuthContext } from '../../context/authContext'
 
 export default function MainLayout() {
+  const { authUser, isLoading } = useContext(AuthContext) as IAuthContext
+
+  if (isLoading) return <div>Loading...</div>
+  if (authUser) return <Navigate to="/dashboard" />
+  
   return (
-    <div className="min-h-[100vh] m-0 p-0 flex flex-col">
+    <div className="min-h-screen flex flex-col w-screen overflow-hidden">
       <nav className="sticky top-0 z-40 shadow-sm w-full bg-white flex items-center justify-between py-2 px-4 sm:px-14 sm:py-3">
         <img src="/asset/img/blogo.png" alt="logo" className="h-[34px] w-[130px] object-contain" />
         <div className="relative">

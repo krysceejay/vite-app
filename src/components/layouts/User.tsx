@@ -1,10 +1,16 @@
-import { Link, Outlet } from 'react-router-dom'
+import { useContext } from 'react';
+import { Link, Outlet, Navigate } from 'react-router-dom'
+import { IUser } from '../../api/types/user-types';
+import AuthContext, { IAuthContext } from '../../context/authContext';
 
 import DashboardNav from '../ui/DashboardNav'
 
 
-export default function DashboardLayout(){
+export default function DashboardLayout() {
+  const { authUser, logout } = useContext(AuthContext) as IAuthContext
 
+  // if (isLoading) return <div>Loading...</div>
+  if (!authUser) return <Navigate to="/" />
   return (
     <div className="relative min-h-screen flex w-screen overflow-hidden">
       <DashboardNav />
@@ -14,10 +20,11 @@ export default function DashboardLayout(){
             <div className="rounded-full w-7 h-7 overflow-hidden">
               <img src="/asset/img/profilepix.png" alt="Profile Picture" className="object-cover h-7 w-7" />
             </div>
-            <span className="text-sm">Adeyemi Adedapo</span>
+            <span className="text-sm capitalize">{`${authUser.first_name} ${authUser.last_name}`}</span>
             <div className="text-gray-800 cursor-pointer">
               <svg className="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
             </div>
+            <span className="cursor-pointer" onClick={() => logout()}>Logout</span>
           </div>
         </nav>
         <section className="px-4 md:px-6 xl:px-10 pt-10 pb-14 flex flex-col min-h-[95vh] ml-0 lg:ml-60 xl:ml-72">

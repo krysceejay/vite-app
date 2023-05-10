@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 
 //Layout
@@ -5,9 +6,9 @@ import MainLayout from './components/layouts/Main'
 import DashboardLayout from './components/layouts/User'
 
 //Auth
-import Login from './pages/auth/Login'
-import Signup from './pages/auth/Signup'
-import ForgotPassword from './pages/auth/ForgotPassword'
+const Login = lazy(() => import('./pages/auth/Login'))
+const Signup = lazy(() => import('./pages/auth/Signup'))
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'))
 
 //Dashboard
 import Dashboard from './pages/dashboard'
@@ -19,25 +20,15 @@ import KYCDocuments from './pages/dashboard/kyc'
 import Messages from './pages/dashboard/messages'
 import Help from './pages/dashboard/help'
 
+// Info
+import NotFound from './pages/NotFound'
+import AccountCreated from './pages/AccountCreated'
+import { AuthContextProvider } from './context/authContext'
 
 
 function App() {
   return (
     <Routes>
-      {/* <Route element={<PrivateRoute />}>
-        <Route element={<BottomTabs />}>
-          <Route path="home" element={<Home />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="profile" element={<Profile />} />
-        </Route>
-        <Route path="category/:catname" element={<Category />} />
-        <Route path="review-orders" element={<ReviewOrder />} />
-        <Route path="select-address" element={<SelectAddress />} />
-        <Route path="pick-up" element={<PickUp />} />
-        <Route path="order/:orderNum" element={<OrderDetails />} />
-        <Route path="profile/edit" element={<EditProfile />} />
-        <Route path="profile/recurring-pickups" element={<RecurringPickups />} />
-      </Route> */}
       <Route element={<DashboardLayout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="transfers" element={<Transfers />} />
@@ -49,9 +40,23 @@ function App() {
         <Route path="help" element={<Help />} />
       </Route>
       <Route element={<MainLayout />}>
-        <Route path="/" element={<Login />} />
-        <Route path="signup" element={<Signup />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="/" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Login />
+          </Suspense>
+        } />
+        <Route path="signup" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Signup />
+          </Suspense>
+        } />
+        <Route path="forgot-password" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <ForgotPassword />
+          </Suspense>
+        } />
+        <Route path="account-successful" element={<AccountCreated />} />
+        <Route path="/*" element={<NotFound />} />
       </Route>
     </Routes>
   )

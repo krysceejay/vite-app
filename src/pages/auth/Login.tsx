@@ -1,50 +1,102 @@
-import { Link } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
+import { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import Button from '../../components/shared/Button'
+import { FormInput } from '../../components/shared/Form'
+import AuthContext, { IAuthContext } from '../../context/authContext'
+
+interface ILoginInput {
+  uemail: string
+  upassword: string
+}
 
 export default function Login() {
+  const navigate = useNavigate()
+  const { login } = useContext(AuthContext) as IAuthContext
+  const [formData, setFormData] = useState<ILoginInput>({
+    uemail: '',
+    upassword: ''
+  })
+
+  const { uemail, upassword } = formData
+
+  const { isLoading, mutate: loginUser } = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      navigate('/dashboard', {
+        replace: true
+      })
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data.message)
+      } else {
+        console.log('unexpected', err)
+      }
+    }
+  })
+
+  const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const loginInput = {
+      email: uemail,
+      password: upassword
+    }
+    loginUser(loginInput)
+  }
+
   return (
     <section className="h-[86vh]">
       <div className="container h-full flex justify-center items-center">
         <div className="w-full max-w-sm bg-white py-11 px-6 sm:p-11 shadow-md rounded-md">
-          <form className="w-full">
+          <form className="w-full" onSubmit={handleSubmit}>
             <h3 className="text-xl font-medium">You’re Welcome!</h3>
             <p className="text-xs mt-6">Enter your registered email address and password to continue.</p>
-            <div className="mt-5 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
-              <label className="text-[#888888] text-[10px] px-3 pt-3 block">
-                  Email
-              </label>
-              <input 
-                className="
-                  h-10 appearance-none border border-transparent bg-[#F5F6FA] w-full px-3 pb-2 text-[#242424] text-[15px] font-medium 
-                  leading-tight focus:outline-none focus:shadow-none" 
-                type="email" 
-                id="email"
-                name="email"
-                placeholder="xyz@gmail.com" 
+            <div className="mt-5 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
+              <FormInput
+                label="Email"
+                type="email"
+                name="uemail"
+                value={uemail}
+                onChange={handleOnchange}
+                placeholder="xyz@gmail.com"
+                required
+                errorMessage="Must be a valid email"
               />
             </div>
-            <div className="mt-2 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
-              <label className="text-[#888888] text-[10px] px-3 pt-3 block">
-                  Password
-              </label>
-              <input 
-                className="
-                  h-10 appearance-none border-0 border-transparent bg-[#F5F6FA] w-full px-3 pb-2 text-[#242424] text-[15px] font-medium 
-                  leading-tight focus:outline-none focus:shadow-none" 
-                type="password" 
-                id="password"
-                name="password"
-                placeholder="*****************" 
+            <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
+              <FormInput
+                label="Password"
+                type="password"
+                name="upassword"
+                value={upassword}
+                onChange={handleOnchange}
+                placeholder="*****************"
+                required
+                errorMessage="Password is required"
               />
             </div>
             <Link to="/" className="text-xs text-green-color mt-5">Forgot Password?</Link>
             <div className="mt-3">
-              <Link to="/dashboard">
-                <Button>
-                  <div className="bg-green-color py-3 px-4 rounded-md">Log in to Vargent</div>
-                </Button>
-              </Link>
+              <Button type="submit" disabled={isLoading}>
+                <div className="bg-green-color py-3 px-4 rounded-md flex items-center justify-center">
+                  {isLoading &&
+                    <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  }
+                  <span className="font-medium"> Log in to Vargent </span>
+                </div>
+              </Button>
             </div>
             <p className="text-xs mt-5">
               By logging in, you agree to our <Link to="/" className="text-green-color">terms and conditions</Link>.
