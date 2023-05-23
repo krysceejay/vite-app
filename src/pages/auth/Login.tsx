@@ -1,12 +1,12 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
-import { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { currentUser, signIn } from '../../api/users'
 
 import Button from '../../components/shared/Button'
 import { FormInput } from '../../components/shared/Form'
-import AuthContext, { IAuthContext } from '../../context/authContext'
 
 interface ILoginInput {
   uemail: string
@@ -14,8 +14,6 @@ interface ILoginInput {
 }
 
 export default function Login() {
-  const navigate = useNavigate()
-  const { login } = useContext(AuthContext) as IAuthContext
   const [formData, setFormData] = useState<ILoginInput>({
     uemail: '',
     upassword: ''
@@ -23,12 +21,10 @@ export default function Login() {
 
   const { uemail, upassword } = formData
 
-  const { isLoading, mutate: loginUser } = useMutation({
-    mutationFn: login,
+  const { isLoading, mutate: loginUser, data } = useMutation({
+    mutationFn: signIn,
     onSuccess: () => {
-      navigate('/dashboard', {
-        replace: true
-      })
+      toast.success('Login successful')
     },
     onError: (err) => {
       if (isAxiosError(err)) {
@@ -37,6 +33,12 @@ export default function Login() {
         console.log('unexpected', err)
       }
     }
+  })
+
+  useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => currentUser(),
+    enabled: !!data,
   })
 
   const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +91,7 @@ export default function Login() {
               <Button type="submit" disabled={isLoading}>
                 <div className="bg-green-color py-3 px-4 rounded-md flex items-center justify-center">
                   {isLoading &&
-                    <svg className="mr-3 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg className="mr-4 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>

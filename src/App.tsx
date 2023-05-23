@@ -23,7 +23,6 @@ import Help from './pages/dashboard/help'
 // Info
 import NotFound from './pages/NotFound'
 import AccountCreated from './pages/AccountCreated'
-import { AuthContextProvider } from './context/authContext'
 
 
 function App() {
@@ -56,8 +55,8 @@ function App() {
           </Suspense>
         } />
         <Route path="account-successful" element={<AccountCreated />} />
-        <Route path="/*" element={<NotFound />} />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }

@@ -1,3 +1,5 @@
+import { ICountry } from "./country-types"
+
 export interface ICreateUser {
   first_name: string
   last_name: string
@@ -27,6 +29,8 @@ export interface IUser {
   is_email_verified: boolean
   status: string
   verify_code: string
+  country: ICountry
+  last_login: Date
 }
 
 export interface ILoginResponse {

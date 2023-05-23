@@ -4,9 +4,8 @@ import { Link, Navigate, Outlet } from 'react-router-dom'
 import AuthContext, { IAuthContext } from '../../context/authContext'
 
 export default function MainLayout() {
-  const { authUser, isLoading } = useContext(AuthContext) as IAuthContext
+  const { authUser } = useContext(AuthContext) as IAuthContext
 
-  if (isLoading) return <div>Loading...</div>
   if (authUser) return <Navigate to="/dashboard" />
   
   return (

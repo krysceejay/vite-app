@@ -9,8 +9,8 @@ export function signIn(input: ILogin): Promise<ILoginResponse> {
   return postData('/auth/login', input)
 }
 
-export function currentUser(controller?: AbortController): Promise<IUser> {
-  return getData('/auth/profile', controller)
+export function currentUser(): Promise<IUser> {
+  return getData('/auth/profile')
 }
 
 export function signOut(): Promise<ILogoutResponse> {

@@ -23,6 +23,7 @@ api.interceptors.response.use(
     //   // store.dispatch({type: LOGOUT});
     //   console.clear()
     // }
+    // console.clear()
     return Promise.reject(err);
   },
 )
