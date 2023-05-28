@@ -16,6 +16,7 @@ export interface ITransfer {
   beneficiary_send_number: string
   beneficiary_service: string
   beneficiary_country: string
+  rate: number
   created_at: Date
   updated_at: Date
 }

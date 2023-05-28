@@ -17,8 +17,8 @@ export default function TransferDetails() {
   const { isLoading, isError, error, data: transferData } = useTransferDetails(id)
 
   if (isLoading) return <p>Loading...</p>
-  if (!transferData) return <p>Not found</p>
-  // if (isError) return <p>{JSON.stringify(error)}</p>
+  // if (!transferData) return <p>Not found</p>
+   if (isError) return <p>{JSON.stringify(error)}</p>
 
   return (
     <main className="flex-grow">
@@ -73,7 +73,7 @@ export default function TransferDetails() {
               </div>
               <div className="flex justify-between items-center space-x-3 py-3 sm:px-4 border-t border-[#E0E0E0]">
                 <span className="text-xs font-light">Rate</span>
-                <span className="text-xs font-semibold">{transferData.sent_currency} = {numberFormat(transferData.payout_amount / transferData.sent_amount)} {transferData.payout_currency}</span>
+                <span className="text-xs font-semibold">{transferData.sent_currency} = {numberFormat(transferData.rate)} {transferData.payout_currency}</span>
               </div>
               <div className="flex justify-between items-center space-x-3 py-3 sm:px-4 border-t border-[#E0E0E0]">
                 <span className="text-xs font-light">Payment Method</span>

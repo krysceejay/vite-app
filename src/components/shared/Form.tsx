@@ -1,16 +1,9 @@
 import React, { useState } from 'react'
 
-interface FormInputProps {
-  label?: string
-  type: string
-  name: string
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  placeholder: string
-  required?: boolean
-  errorMessage?: string
-  pattern?: string
-  showLabel?: boolean
+type FormInputProps = React.ComponentProps<'input'> & {
+  label?: string 
+  errorMessage?: string 
+  showLabel?: boolean 
   hasError?: boolean
 }
 

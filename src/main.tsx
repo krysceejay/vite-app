@@ -15,9 +15,15 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      retry: 0
+      retry: 0,
     }
-  }
+  },
+  // logger: {
+  //   log: console.log,
+  //   warn: console.warn,
+  //   // ✅ no more errors on the console for tests
+  //   error: console.error,
+  // },
 })
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

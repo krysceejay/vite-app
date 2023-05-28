@@ -41,14 +41,17 @@ export default function TransferTable({ data }: TableProps) {
       <tbody className="font-light break-words">
         {data?.map(transfer =>
           <tr className="text-left border-b border-b-[#F5F6FA]" key={transfer.guid}>
-            <td className="p-4">{transfer.transfer_id}</td>
+            <td className="p-4">#{transfer.transfer_id}</td>
             <td className="p-4">{transfer.beneficiary_name}</td>
             <td className="p-4 hidden sm:table-cell">{transfer.payment_method}</td>
             <td className="p-4 hidden sm:table-cell">{transfer.sent_currency} {numberFormat(transfer.sent_amount)}</td>
             <td className="p-4 hidden sm:table-cell">{transfer.payout_currency} {numberFormat(transfer.payout_amount)}</td>
             <td className="p-4 hidden md:table-cell">{moment(transfer.created_at).format('DD MMM, YYYY')}</td>
             <td className="p-4 hidden md:flex flex-wrap items-center space-x-1">
-              <div className="bg-[#28A745] w-[6px] h-[6px] rounded-full" />
+              {transfer.status.toLowerCase() === 'paid out' ?
+              <div className="bg-[#28A745] w-[6px] h-[6px] rounded-full" /> : 
+              <div className="bg-[#EEB012] w-[6px] h-[6px] rounded-full" /> 
+              }
               <h3>{transfer.status}</h3>
             </td>
             <td className="p-4">

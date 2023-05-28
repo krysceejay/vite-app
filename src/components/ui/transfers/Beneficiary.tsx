@@ -1,5 +1,5 @@
 import { IPageState, TAddBeneficiaryInput, TCountry, TNewTransfer, TPaymentMethod, TSelectBeneficiary } from "../../../common-types"
-import { useBeneficiaryData, useCountryBeneficiaryData } from "../../../hooks/useBeneficiary"
+import { useCountryBeneficiaryData } from "../../../hooks/useBeneficiary"
 import { isAxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import Pagination from "../../shared/Pagination"
@@ -24,7 +24,7 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
   toggleModal, paymentMethodOptions }: BeneficiaryProps) {
   const queryClient = useQueryClient()
   let countryOptions: TCountry[] = []
-  const { beneficiaryName, beneficiarySendNumber, deliveryMethod, beneficiaryService, payoutCurrency, isModalOpen } = newTransfer
+  const { payoutCurrency, isModalOpen } = newTransfer
   const [pageState, setPageState] = useState<IPageState>({
     page: 1,
     limit: 10

@@ -4,6 +4,7 @@ import { numberFormat, removeCommaFromNumber, roundToTwoDP } from '../../../util
 import Button from '../../shared/Button'
 import { FormInput } from '../../shared/Form'
 import { toast } from 'react-toastify'
+import { isAxiosError } from 'axios'
 import { getPayoutFeesAndTotal } from '../../../api/countries'
 import { useQuery } from '@tanstack/react-query'
 
@@ -23,7 +24,14 @@ export default function ConfirmPay({ goTo, handleOnchange, handleOnclick, newTra
       sent_amount: +removeCommaFromNumber(sentAmount),
       sent_currency: sentCurrency,
       payout_currency: payoutCurrency
-    })
+    }),
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data.message)
+      } else {
+        console.log('unexpected', err)
+      }
+    }
   })
 
   const userHandleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -74,48 +82,52 @@ export default function ConfirmPay({ goTo, handleOnchange, handleOnclick, newTra
             </div>
           </div>
         </div> */}
-        <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
-          <FormInput
-            label="Transfer Purpose"
-            type="text"
-            name="transferPurpose"
-            value={transferPurpose}
-            onChange={handleOnchange}
-            placeholder=""
-            required
-            errorMessage="Transfer Purpose is required"
-          />
-        </div>
-        <p className="text-[10px] mt-7">Pay the amount due to the account with details below:</p>
-        <div className="mt-3.5 px-7 py-4 bg-[#F5F6FA] rounded">
-          <div className="border-b border-b-white py-4">
-            <p className="text-[10px]">Account Name</p>
-            <p className="text-xs font-medium mt-1">Provargent Technologies Limited</p>
-          </div>
-          <div className="border-b border-b-white py-4">
-            <p className="text-[10px]">Account Number</p>
-            <p className="text-xs font-medium mt-1">1002378627</p>
-          </div>
-          <div className="border-b border-b-white py-4">
-            <p className="text-[10px]">Bank Name</p>
-            <p className="text-xs font-medium mt-1">Providus Bank</p>
-          </div>
-          {/* <div className="border-b border-b-white py-4">
+        {!isError &&
+          <>
+            <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
+              <FormInput
+                label="Transfer Purpose"
+                type="text"
+                name="transferPurpose"
+                value={transferPurpose}
+                onChange={handleOnchange}
+                placeholder=""
+                required
+                errorMessage="Transfer Purpose is required"
+              />
+            </div>
+            <p className="text-[10px] mt-7">Pay the amount due to the account with details below:</p>
+            <div className="mt-3.5 px-7 py-4 bg-[#F5F6FA] rounded">
+              <div className="border-b border-b-white py-4">
+                <p className="text-[10px]">Account Name</p>
+                <p className="text-xs font-medium mt-1">Provargent Technologies Limited</p>
+              </div>
+              <div className="border-b border-b-white py-4">
+                <p className="text-[10px]">Account Number</p>
+                <p className="text-xs font-medium mt-1">1002378627</p>
+              </div>
+              <div className="border-b border-b-white py-4">
+                <p className="text-[10px]">Bank Name</p>
+                <p className="text-xs font-medium mt-1">Providus Bank</p>
+              </div>
+              {/* <div className="border-b border-b-white py-4">
             <p className="text-[10px]">Payment/Transaction Reference</p>
             <p className="text-xs font-medium mt-1">29201923</p>
           </div> */}
-          <div className="py-4">
-            <p className="text-[10px]">Amount Due</p>
-            <p className="text-xs font-medium mt-1">{sentCurrency} {payoutFeeTotal ? numberFormat(roundToTwoDP(payoutFeeTotal.total_payment)) : 0}</p>
-          </div>
-        </div>
-        <div className="mt-5">
-          <Button
-          onClick={userHandleClick}
-          >
-            <div className="bg-green-color py-3 px-4 rounded-md">Confirm Transfer</div>
-          </Button>
-        </div>
+              <div className="py-4">
+                <p className="text-[10px]">Amount Due</p>
+                <p className="text-xs font-medium mt-1">{sentCurrency} {payoutFeeTotal ? numberFormat(roundToTwoDP(payoutFeeTotal.total_payment)) : 0}</p>
+              </div>
+            </div>
+            <div className="mt-5">
+              <Button
+                onClick={userHandleClick}
+              >
+                <div className="bg-green-color py-3 px-4 rounded-md">Confirm Transfer</div>
+              </Button>
+            </div>
+          </>
+        }
       </div>
     </div>
   )

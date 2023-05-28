@@ -8,6 +8,13 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 })
+
+const apiFile = axios.create({
+  baseURL,
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+})
 /**
  intercept any error responses from the api
  and check if the token is no longer valid.
@@ -23,7 +30,7 @@ api.interceptors.response.use(
     //   // store.dispatch({type: LOGOUT});
     //   console.clear()
     // }
-    // console.clear()
+    //console.clear()
     return Promise.reject(err);
   },
 )
@@ -47,6 +54,11 @@ export const patchData = async (url: string, post: object) => {
 
 export const deleteData = async (url: string) => {
   const { data } = await api.delete(url, { withCredentials: true })
+  return data
+}
+
+export const uploadFile = async (url: string, post: object) => {
+  const { data } = await apiFile.post(url, post, { withCredentials: true })
   return data
 }
 
