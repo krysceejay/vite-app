@@ -16,9 +16,9 @@ export default function TransferDetails() {
 
   const { isLoading, isError, error, data: transferData } = useTransferDetails(id)
 
-  if (isLoading) return <p>Loading...</p>
-  // if (!transferData) return <p>Not found</p>
-   if (isError) return <p>{JSON.stringify(error)}</p>
+  // if (isLoading) return <p>Loading...</p>
+   if (!transferData) return <p>Not found</p>
+  // if (isError) return <p>{JSON.stringify(error)}</p>
 
   return (
     <main className="flex-grow">

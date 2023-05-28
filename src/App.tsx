@@ -11,12 +11,12 @@ const Signup = lazy(() => import('./pages/auth/Signup'))
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'))
 
 //Dashboard
-import Dashboard from './pages/dashboard'
-import Transfers from './pages/dashboard/transfers'
-import TransferDetails from './pages/dashboard/transfers/TransferDetails'
-import NewTransfer from './pages/dashboard/transfers/New'
-import Beneficiaries from './pages/dashboard/beneficiaries'
-import KYCDocuments from './pages/dashboard/kyc'
+const Dashboard = lazy(() => import('./pages/dashboard'))
+const Transfers = lazy(() => import('./pages/dashboard/transfers'))
+const TransferDetails = lazy(() => import('./pages/dashboard/transfers/TransferDetails'))
+const NewTransfer = lazy(() => import('./pages/dashboard/transfers/New'))
+const Beneficiaries = lazy(() => import('./pages/dashboard/beneficiaries'))
+const KYCDocuments = lazy(() => import('./pages/dashboard/kyc'))
 import Messages from './pages/dashboard/messages'
 import Help from './pages/dashboard/help'
 
@@ -29,12 +29,36 @@ function App() {
   return (
     <Routes>
       <Route element={<DashboardLayout />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="transfers" element={<Transfers />} />
-        <Route path="transfers/:id" element={<TransferDetails />} />
-        <Route path="transfers/new" element={<NewTransfer />} />
-        <Route path="beneficiaries" element={<Beneficiaries />} />
-        <Route path="kyc" element={<KYCDocuments />} />
+        <Route path="dashboard" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Dashboard />
+          </Suspense>
+        } />
+        <Route path="transfers" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Transfers />
+          </Suspense>
+        } />
+        <Route path="transfers/:id" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <TransferDetails />
+          </Suspense>
+        } />
+        <Route path="transfers/new" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <NewTransfer />
+          </Suspense>
+        } />
+        <Route path="beneficiaries" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Beneficiaries />
+          </Suspense>
+        } />
+        <Route path="kyc" element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <KYCDocuments />
+          </Suspense>
+        } />
         <Route path="messages" element={<Messages />} />
         <Route path="help" element={<Help />} />
       </Route>

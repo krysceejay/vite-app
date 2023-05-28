@@ -8,7 +8,7 @@ type VerticalStep = {
 }
 
 type VerticalStepGroupProp = {
-  status: string
+  status?: string
 }
 
 const steps: VerticalStep[] = [
@@ -23,7 +23,7 @@ const steps: VerticalStep[] = [
 export default function VerticalStepGroup({status}: VerticalStepGroupProp) {
   let stp: VerticalStep = { id: 1, title: "Payment Pending", text: "We are waiting for you to complete payment.", isEnd: false }
 
-  stp = steps.find(s => s.title.toLowerCase() === status.toLowerCase()) ?? stp
+  stp = steps.find(s => s.title.toLowerCase() === status) ?? stp
 
   const result = steps.map(step =>
     <div key={step.id} className={`px-6 pb-6 border-l relative ${step.isEnd ? 'border-transparent' : step.id < stp.id ? 'border-green-color' : 'border-[#d9d9d9]'}`}>

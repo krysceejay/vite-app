@@ -16,13 +16,14 @@ const queryClient = new QueryClient({
       refetchOnMount: false,
       refetchOnReconnect: false,
       retry: 0,
+     // suspense: true
     }
   },
   // logger: {
   //   log: console.log,
   //   warn: console.warn,
   //   // ✅ no more errors on the console for tests
-  //   error: console.error,
+  //   error: () => "my error occurred"
   // },
 })
 
@@ -30,15 +31,15 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <AuthContextProvider>
-          <App />
-        </AuthContextProvider>
-        <ToastContainer
-          theme="dark"
-          position="top-right"
-          hideProgressBar={false}
-          transition={Zoom}
-        />
+          <AuthContextProvider>
+            <App />
+          </AuthContextProvider>
+          <ToastContainer
+            theme="dark"
+            position="top-right"
+            hideProgressBar={false}
+            transition={Zoom}
+          />
         <ReactQueryDevtools />
       </QueryClientProvider>
     </BrowserRouter>
