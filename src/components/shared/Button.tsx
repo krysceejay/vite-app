@@ -1,10 +1,18 @@
-interface ButtonProps {
-  children: React.ReactNode
-}
+// interface ButtonProps {
+//   children: React.ReactNode
+//   buttonProps: React.ComponentProps<'button'>
+//   // type?: "button" | "submit" | "reset" | undefined
+//   // disabled?: boolean
+// }
 
-export default function Button({ children }: ButtonProps) {
+type ButtonProps = React.ComponentProps<'button'>
+
+export default function Button({ children, ...rest }: ButtonProps) {
   return (
-    <button className="block text-white text-xs font-medium focus:outline-none focus:shadow-outline w-full" type="button">
+    <button
+      className="block text-white text-xs font-medium focus:outline-none focus:shadow-outline w-full"
+      {...rest}
+    >
       {children}
     </button>
   )
