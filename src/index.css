@@ -3,7 +3,7 @@
 @tailwind base;
 @tailwind components;
 
-:root{
+:root {
   font-family: 'Inter', sans-serif;
 }
 
@@ -16,9 +16,9 @@ body {
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #F5F6FA inset !important;
 }
 
@@ -35,9 +35,9 @@ input:-webkit-autofill:active{
 }
 
 .auto-grid3 {
-display: grid;
-gap: 1rem;
-grid-template-columns: repeat(auto-fill, minmax(120px, 1fr))
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr))
 }
 
 @tailwind utilities;

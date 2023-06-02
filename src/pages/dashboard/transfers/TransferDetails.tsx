@@ -10,16 +10,16 @@ import VerticalStep from '../../../components/shared/VerticalStep'
 import { useTransferDetails } from '../../../hooks/useTransfer'
 import { numberFormat, roundToTwoDP } from '../../../utils/helper'
 import VerticalStepGroup from '../../../components/shared/VerticalStep'
+import NotFound from '../../NotFound'
 
 export default function TransferDetails() {
   let { id } = useParams()
 
-  const { isLoading, isError, error, data: transferData } = useTransferDetails(id)
+  const { isLoading, data: transferData } = useTransferDetails(id)
 
   if (isLoading) return <p>Loading...</p>
-  // if (!transferData) return <p>Not found</p>
-   if (isError) return <p>{JSON.stringify(error)}</p>
-
+  if (!transferData) return <NotFound />
+  
   return (
     <main className="flex-grow">
       <section className="flex flex-wrap justify-between items-center">

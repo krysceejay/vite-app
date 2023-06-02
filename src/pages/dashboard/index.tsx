@@ -5,12 +5,13 @@ import moment from 'moment'
 import { getUserTransfersSumSent } from '../../api/transfers'
 import DetailsLink from '../../components/shared/DetailsLink'
 import AuthContext, { IAuthContext } from '../../context/authContext'
-import {useTransferData} from '../../hooks/useTransfer'
+import { useTransferData } from '../../hooks/useTransfer'
 import { numberFormat, stringToHslColor } from '../../utils/helper'
 import renderFlag from '../../utils/flags'
 import NewTransferSend from '../../components/ui/transfers/NewTransferSend'
-import {useBeneficiaryData} from '../../hooks/useBeneficiary'
+import { useBeneficiaryData } from '../../hooks/useBeneficiary'
 import TransferTable from '../../components/ui/transfers/TransferTable'
+import Skeleton from '../../components/shared/Skeleton'
 
 type TNewTransfer = {
   sentAmount: string
@@ -63,7 +64,7 @@ export default function Dashboard() {
     })
   }
 
-  if (transferIsLoading || sumSentIsLoading || beneficiaryIsLoading) return <p>Loading...</p>
+  // if (transferIsLoading || sumSentIsLoading || beneficiaryIsLoading) return <p>Loading...</p>
   // if (getTransfers.isError) return <p>Error occurred</p>
   return (
     <section className="flex-grow overflow-hidden">
@@ -115,15 +116,19 @@ export default function Dashboard() {
                   </svg>
                   <h3 className="text-sm">Total Sent</h3>
                 </div>
-                <p className="text-2xl mt-1 font-bold max-w-xs break-words">
-                  {sumSent !== undefined ?
-                    numberFormat(sumSent,
-                      {
-                        currency: authUser?.country.currency || 'NGN',
-                        style: 'currency'
-                      })
-                    : null}
-                </p>
+                {sumSentIsLoading ? <div className="h-6 w-3/5 mt-2">
+                  <Skeleton />
+                </div> :
+                  <p className="text-2xl mt-1 font-bold max-w-xs break-words">
+                    {sumSent !== undefined ?
+                      numberFormat(sumSent,
+                        {
+                          currency: authUser?.country.currency || 'NGN',
+                          style: 'currency'
+                        })
+                      : null}
+                  </p>
+                }
                 <div className="mt-3">
                   <DetailsLink link="/transfer" text="See Details" isTable={false} />
                 </div>
@@ -135,9 +140,13 @@ export default function Dashboard() {
                   </svg>
                   <h3 className="text-sm">Beneficiaries</h3>
                 </div>
+                {beneficiaryIsLoading ? <div className="h-6 w-3/5 mt-2">
+                  <Skeleton />
+                </div> :
                 <p className="text-2xl mt-1 font-bold">
                   {beneficiaryData?.total !== undefined ? numberFormat(beneficiaryData.total) : 0}
                 </p>
+                }
                 <div className="mt-3">
                   <DetailsLink link="/beneficiaries" text="See Details" isTable={false} />
                 </div>
