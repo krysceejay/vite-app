@@ -179,7 +179,7 @@ export default function Beneficiaries() {
                   <div
                     className="w-16 h-16 rounded-full flex justify-center items-center"
                     style={{ backgroundColor: stringToHslColor(`${beneficiary.guid}`) }}>
-                    <h3 className="text-lg font-bold">{beneficiary.full_name.charAt(0)}</h3>
+                    <h3 className="text-lg font-bold uppercase">{beneficiary.full_name.charAt(0)}</h3>
                   </div>
                   <div className="mt-2.5 text-center">
                     <p className="text-xs font-semibold">{beneficiary.full_name}</p>

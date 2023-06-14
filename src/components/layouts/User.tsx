@@ -42,7 +42,7 @@ export default function DashboardLayout() {
               {authUser?.profile_image ?
                   <img src={`${import.meta.env.VITE_PROFILE_URL}/${authUser.profile_image}`} alt="Profile Picture" className="h-full w-full object-cover rounded-full" /> :
                   <div
-                    className="w-full h-full rounded-full flex justify-center items-center font-medium text-xs"
+                    className="w-full h-full rounded-full flex justify-center items-center font-medium text-xs uppercase"
                     style={{ backgroundColor: stringToHslColor(authUser?.email) }}
                   >
                     {authUser ? `${authUser.first_name.charAt(0)}${authUser.last_name.charAt(0)}` : ''}

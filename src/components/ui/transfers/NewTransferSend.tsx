@@ -47,7 +47,7 @@ const NewTransferSend = ({
             />
           </div>
           <div className="text-center pr-6">
-            <img src={renderFlag(authUser?.country.country_name)} alt="Nigeria Flag" className="mx-auto w-6 h-4" />
+            <img src={renderFlag(authUser?.country.currency)} alt="Country Flag" className="mx-auto w-6 h-4" />
             <p className="text-xs font-medium mt-1">{authUser?.country.currency}</p>
           </div>
         </div>
@@ -59,7 +59,7 @@ const NewTransferSend = ({
             </p>
           </div>
           <div className="text-center">
-            <img src={renderFlag(currency)} alt="Senegal Flag" className="mx-auto w-6 h-4" />
+            <img src={renderFlag(currency)} alt="Country Flag" className="mx-auto w-6 h-4" />
             <div className="relative mt-1 w-11">
               <select
                 defaultValue={currency}
