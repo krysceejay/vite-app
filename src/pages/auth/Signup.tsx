@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import Button from '../../components/shared/Button'
 import { FormDoubleInput, FormInput, FormSelect } from '../../components/shared/Form'
 import { createUser } from '../../api/users'
-import useCountryData from '../../hooks/useCountryData'
+import {useCountryData} from '../../hooks/useCountryData'
 import { transformData } from '../../utils/helper'
 
 interface IUserFormInput {

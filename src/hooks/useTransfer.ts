@@ -2,8 +2,9 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-import { createTransfer, getUserTransfer, getUserTransfers } from '../api/transfers'
+import { createTransfer, getUserTransfer, getUserTransfers, updateTransfer } from '../api/transfers'
 import { PaginationOptions } from '../api/types/shared-api-types'
+import { IUpdateTransfer } from '../api/types/transfer-types'
 
 export const useTransferData = ({page, limit}: PaginationOptions) => {
   return useQuery({
@@ -27,10 +28,33 @@ export const useTransferDetails = (id?: string) => {
   })
 }
 
-export const useNewTransfer = () => {
-  const navigate = useNavigate()
+export const useNewTransfer = (goTo: (int: number) => void) => {
   return useMutation({
     mutationFn: createTransfer,
+    onSuccess: () => {
+      goTo(2)
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        const resErrors = err.response?.data.message
+        if (Array.isArray(resErrors)) {
+          resErrors.forEach((er: { field: string, error: string }) => {
+            toast.error(er.error.replace(/_/g, ' '))
+          })
+        }else {
+          toast.error(resErrors)
+        }
+      } else {
+        console.log('unexpected', err)
+      }
+    }
+  })
+}
+
+export const useConfirmTransfer = (guid?: string) => {
+  const navigate = useNavigate()
+  return useMutation({
+    mutationFn: (input: IUpdateTransfer) => updateTransfer(input, guid),
     onSuccess: (data) => {
       toast.success('Transfer added successfully')
       navigate(`/transfers/${data.guid}`)
@@ -38,9 +62,13 @@ export const useNewTransfer = () => {
     onError: (err) => {
       if (isAxiosError(err)) {
         const resErrors = err.response?.data.message
-        resErrors.forEach((er: { field: string, error: string }) => {
-          toast.error( er.error.replace(/_/g, ' '))
-        })
+        if (Array.isArray(resErrors)) {
+          resErrors.forEach((er: { field: string, error: string }) => {
+            toast.error(er.error.replace(/_/g, ' '))
+          })
+        }else {
+          toast.error(resErrors)
+        }
       } else {
         console.log('unexpected', err)
       }

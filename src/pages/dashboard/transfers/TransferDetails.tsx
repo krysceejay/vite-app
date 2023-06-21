@@ -6,10 +6,10 @@ import { toast } from 'react-toastify'
 import { getUserTransfer } from '../../../api/transfers'
 
 import Button from '../../../components/shared/Button'
-import VerticalStep from '../../../components/shared/VerticalStep'
+import VerticalStep from '../../../components/ui/transfers/VerticalStep'
 import { useTransferDetails } from '../../../hooks/useTransfer'
 import { numberFormat, roundToTwoDP } from '../../../utils/helper'
-import VerticalStepGroup from '../../../components/shared/VerticalStep'
+import VerticalStepGroup from '../../../components/ui/transfers/VerticalStep'
 import NotFound from '../../NotFound'
 
 export default function TransferDetails() {

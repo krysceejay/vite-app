@@ -1,11 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
-import { getAllCountries } from '../api/countries'
+import { getAllCountries, getCountryByCurrency } from '../api/countries'
 
-const useCountryData = () => {
+export const useCountryData = () => {
   return useQuery({
     queryKey: ['country'],
     queryFn: () => getAllCountries(),
   })
 }
 
-export default useCountryData
+export const usePayoutCountryData = (currency: string) => {
+  return useQuery({
+    queryKey: ['country', currency],
+    queryFn: () => getCountryByCurrency(currency),
+  })
+}

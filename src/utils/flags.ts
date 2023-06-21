@@ -9,37 +9,37 @@ import Cameroon from '/asset/img/flags/cameroon.png'
 import Benin from '/asset/img/flags/benin.png'
 import IvoryCoast from '/asset/img/flags/ivorycoast.png'
 
-const renderFlag = (currency?: string): string => {
+const renderFlag = (country?: string): string => {
   let flag: string
-  switch (currency) {
-    case 'NGN':
+  switch (country) {
+    case 'Nigeria':
       flag = Nigeria
       break
-    case 'XOF':
+    case 'Senegal':
       flag = Senegal
       break
-    case 'ZMW':
+    case 'Zambia':
       flag = Zambia
       break
-    case 'GHS':
+    case 'Ghana':
       flag = Ghana
       break
-    case 'RWF':
+    case 'Rwanda':
       flag = Rwanda
       break
-    case 'KES':
+    case 'Kenya':
       flag = Kenya
       break
-    case 'TZS':
+    case 'Tanzania':
       flag = Tanzania
       break
-    case 'XAF':
+    case 'Cameroon':
       flag = Cameroon
       break
-    case '(BJ)-XOF':
+    case 'Benin':
       flag = Benin
       break
-    case '(CI)-XOF':
+    case 'IvoryCoast':
       flag = IvoryCoast
       break
     default:

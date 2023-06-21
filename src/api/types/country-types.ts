@@ -1,3 +1,5 @@
+import { ICurrency } from "./currency-types";
+
 export interface ChargeFees {
   start_range: number;
   end_range: number;
@@ -8,10 +10,11 @@ export interface ChargeFees {
 export interface ICountry {
   guid: string
   country_name: string
-  currency: string
+  currency: ICurrency
   dial_code: string
-  rates: object
   charge_fees: ChargeFees[]
+  send_payment_method: string[]
+  receive_payment_method: string[]
   created_at: Date
   updated_at: Date
 }

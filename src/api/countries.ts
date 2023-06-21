@@ -5,6 +5,10 @@ export function getAllCountries(): Promise<ICountry[]> {
   return getData('/countries')
 }
 
+export function getCountryByCurrency(currency: string): Promise<ICountry> {
+  return getData(`/countries/country/${currency}`)
+}
+
 export function getPayoutFeesAndTotal({ sent_amount, sent_currency, payout_currency }: IPayoutFeesTransferInput): Promise<IPayoutFeesTransferOutput> {
   if(sent_amount <= 0){
     return Promise.resolve({

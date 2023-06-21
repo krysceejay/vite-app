@@ -48,7 +48,7 @@ export const postData = async (url: string, post: object) => {
 }
 
 export const patchData = async (url: string, post: object) => {
-  const { data } = await api.put(url, post, { withCredentials: true })
+  const { data } = await api.patch(url, post, { withCredentials: true })
   return data
 }
 

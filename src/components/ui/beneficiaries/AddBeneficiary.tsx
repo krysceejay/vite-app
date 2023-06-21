@@ -8,9 +8,9 @@ type AddBeneficiaryProp = {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   handleOnchange: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  handleSelectCountry: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  handleSelectCountry?: (e: React.ChangeEvent<HTMLSelectElement>) => void
   paymentMethodOptions: TPaymentMethod[]
-  countryOptions: TCountry[]
+  countryOptions?: TCountry[]
   addBeneficiaryIsLoading: boolean
 }
 
@@ -68,6 +68,7 @@ const AddBeneficiary = ({formData, handleSubmit, handleOnchange, handleSelect,
           errorMessage="Delivery Method is required"
         />
       </div>
+      {countryOptions && handleSelectCountry &&
       <div className="mt-2 w-full rounded-md overflow-hidden bg-[#F5F6FA] pb-3 p-1 pr-2">
         <FormSelect
           label="Country"
@@ -78,7 +79,8 @@ const AddBeneficiary = ({formData, handleSubmit, handleOnchange, handleSelect,
           emptyOption="Select country"
           errorMessage="Country is required"
         />
-      </div>
+      </div> 
+      }
       <div className="mt-3">
         <Button type="submit" disabled={addBeneficiaryIsLoading}>
           <div className="bg-green-color py-3 px-4 rounded-md flex items-center justify-center">

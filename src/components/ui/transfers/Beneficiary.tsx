@@ -1,4 +1,4 @@
-import { IPageState, TAddBeneficiaryInput, TCountry, TNewTransfer, TPaymentMethod, TSelectBeneficiary } from "../../../common-types"
+import { IPageState, TAddBeneficiaryInput, TNewTransfer, TPaymentMethod, TSelectBeneficiary } from "../../../common-types"
 import { useCountryBeneficiaryData } from "../../../hooks/useBeneficiary"
 import { isAxiosError } from 'axios'
 import { toast } from 'react-toastify'
@@ -6,25 +6,22 @@ import Pagination from "../../shared/Pagination"
 import { useState } from "react"
 import { stringToHslColor } from "../../../utils/helper"
 import Modal from "../../shared/Modal"
-import { FormInput, FormSelect } from "../../shared/Form"
-import Button from "../../shared/Button"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { addBeneficiary } from "../../../api/beneficiaries"
-import useCountryData from "../../../hooks/useCountryData"
+import AddBeneficiary from "../beneficiaries/AddBeneficiary"
+import { usePayoutCountryData } from "../../../hooks/useCountryData"
 
 interface BeneficiaryProps {
   goTo: (int: number) => void
   newTransfer: TNewTransfer
   handleSelectBeneficiary: (b: TSelectBeneficiary) => void
-  toggleModal: () => void
-  paymentMethodOptions: TPaymentMethod[]
+  handleOnclick: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary, 
-  toggleModal, paymentMethodOptions }: BeneficiaryProps) {
+export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary, handleOnclick }: BeneficiaryProps) {
+  let paymentMethodOptions: TPaymentMethod[] = []
   const queryClient = useQueryClient()
-  let countryOptions: TCountry[] = []
-  const { payoutCurrency, isModalOpen } = newTransfer
+  const { payoutCurrency, beneficiaryName, beneficiarySendNumber, deliveryMethod, beneficiaryCountry, country } = newTransfer
   const [pageState, setPageState] = useState<IPageState>({
     page: 1,
     limit: 10
@@ -39,7 +36,12 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
     countryCurrency: ''
   })
 
-  const { bfullName, bsendNumber, service, bdeliveryMethod, countryName, countryCurrency } = formData
+  const [modal, setModal] = useState({
+    addOpen: false,
+    confirmOpen: false
+  })
+
+  const { bfullName, bsendNumber, service, bdeliveryMethod } = formData
 
   const { page, limit } = pageState
 
@@ -47,19 +49,28 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
     setPageState(prev => ({ ...prev, page: num }))
   }
 
-  const { isLoading: countryIsLoading, data: countryData } = useCountryData()
+  const toggleAddModal = () => {
+    setModal(prev => ({
+     ...prev,
+     addOpen: !prev.addOpen
+    }))
+  }
 
-  if (!countryIsLoading && countryData) {
-    countryOptions = countryData.map(
-      ({
-        guid,
-        country_name,
-        currency
-      }) => ({
-        key: guid,
-        value: country_name,
-        datacurrency: currency,
-        opt: country_name
+  const toggleConfirmModal = () => {
+    setModal(prev => ({
+     ...prev,
+     confirmOpen: !prev.confirmOpen
+    }))
+  }
+
+  const { isLoading: countryIsLoading, isError: countryIsError, data: countryData } = usePayoutCountryData(country)
+
+  if (countryData) {
+    paymentMethodOptions = countryData.receive_payment_method.map(
+      (name, i) => ({
+        key: i.toString(),
+        value: name,
+        opt: name
       })
     )
   }
@@ -68,7 +79,17 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
   const { isLoading: addBeneficiaryIsLoading, mutate: addNewBeneficiary } = useMutation({
     mutationFn: addBeneficiary,
     onSuccess: () => {
-      toggleModal()
+      toggleAddModal()
+      setFormData(prev => ({
+        ...prev,
+        bfullName: '',
+        bsendNumber: '',
+        service: '',
+        bdeliveryMethod: '',
+        countryName: '',
+        countryCurrency: ''
+      }))
+
       queryClient.invalidateQueries(['beneficiaries'])
     },
     onError: (err) => {
@@ -83,17 +104,14 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
     }
   })
 
-  // const handleClick = () => {
-  //   if (!beneficiaryName || !beneficiarySendNumber || !deliveryMethod || !beneficiaryService) {
-  //     toast.error('Kindly add a beneficiary.')
-  //     return
-  //   }
-  //   goTo(2)
-  // }
-
   const userSelectBeneficiary = (ben: TSelectBeneficiary) => {
+    toggleConfirmModal()
     handleSelectBeneficiary(ben)
-    goTo(2)
+  }
+
+  const confirmBeneficiary = (e: React.MouseEvent<HTMLButtonElement>) => {
+    toggleConfirmModal()
+    handleOnclick(e)
   }
 
   const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,14 +126,6 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
     }))
   }
 
-  const handleSelectCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      countryName: e.target.value,
-      countryCurrency: e.target.selectedOptions[0].getAttribute('datacurrency') ?? ''
-    }))
-  }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -124,96 +134,56 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
       send_number: bsendNumber,
       service,
       delivery_method: bdeliveryMethod,
-      country_name: countryName,
-      country_currency: countryCurrency,
+      country_name: countryData ? countryData.country_name : '',
+      country_currency: payoutCurrency,
     }
     addNewBeneficiary(newBeneficiary)
   }
 
-  if (beneficiaryIsLoading) return <p>Loading...</p>
-  if (beneficiaryIsError) return <p>Error occurred</p>
+  if (beneficiaryIsLoading || countryIsLoading) return <p>Loading...</p>
+  if (beneficiaryIsError || countryIsError) return <p>Error occurred</p>
 
   const { pages, total, data } = beneficiaryData
 
   return (
     <div className="w-full sm:w-[420px] mx-auto">
-      {isModalOpen &&
-        <Modal hide={() => toggleModal()}>
-          <form className="w-full my-8" onSubmit={handleSubmit}>
-            <h3 className="text-xl font-medium">Add new beneficiary</h3>
-            <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
-              <FormInput
-                label="Full Name"
-                type="text"
-                name="bfullName"
-                value={bfullName}
-                onChange={handleOnchange}
-                placeholder=""
-                required
-                errorMessage="Beneficiary full name is required"
-              />
-            </div>
-            <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
-              <FormInput
-                label="Send Number"
-                type="text"
-                name="bsendNumber"
-                value={bsendNumber}
-                onChange={handleOnchange}
-                placeholder=""
-                required
-                errorMessage="Beneficiary account number is required"
-              />
-            </div>
-            <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
-              <FormInput
-                label="Service"
-                type="text"
-                name="service"
-                value={service}
-                onChange={handleOnchange}
-                placeholder=""
-                required
-                errorMessage="Service is required"
-              />
-            </div>
-            <div className="mt-2 w-full rounded-md overflow-hidden bg-[#F5F6FA] pb-3 p-1 pr-2">
-              <FormSelect
-                label="Delivery Method"
-                value={bdeliveryMethod}
-                onChange={handleSelect}
-                required
-                options={paymentMethodOptions}
-                emptyOption="Select delivery method"
-                errorMessage="Delivery Method is required"
-              />
-            </div>
-            <div className="mt-2 w-full rounded-md overflow-hidden bg-[#F5F6FA] pb-3 p-1 pr-2">
-              <FormSelect
-                label="Country"
-                value={countryName}
-                onChange={handleSelectCountry}
-                required
-                options={countryOptions}
-                emptyOption="Select country"
-                errorMessage="Country is required"
-              />
-            </div>
-            <div className="mt-3">
-              <Button type="submit" disabled={addBeneficiaryIsLoading}>
-                <div className="bg-green-color py-3 px-4 rounded-md flex items-center justify-center">
-                  {addBeneficiaryIsLoading &&
-                    <svg className="mr-4 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  }
-                  <span className="font-medium"> Add Beneficiary </span>
-                </div>
-              </Button>
-            </div>
-          </form>
-        </Modal>}
+      {modal.addOpen &&
+        <Modal hide={() => toggleAddModal()}>
+          <AddBeneficiary
+            formData={formData}
+            handleSubmit={handleSubmit}
+            handleOnchange={handleOnchange}
+            handleSelect={handleSelect}
+            paymentMethodOptions={paymentMethodOptions}
+            addBeneficiaryIsLoading={addBeneficiaryIsLoading}
+          />
+        </Modal>
+      }
+      {modal.confirmOpen && 
+        <Modal hide={() => toggleConfirmModal()}>
+          <section>
+            <h3 className="text-xl font-medium">Confirm Beneficiary</h3>
+            <aside className="text-xs my-2 py-2 space-y-2 border-y border-y-slate-200">
+              <h3><b>Name:</b> {beneficiaryName}</h3>
+              <p><b>Delivery method:</b> {deliveryMethod}</p>
+              <p><b>Mobile:</b> {beneficiarySendNumber}</p>
+              <p><b>Country:</b> {beneficiaryCountry}</p>
+            </aside>
+            <aside className="flex justify-end items-center space-x-2 mt-3">
+              <button 
+              onClick={() => toggleConfirmModal()}
+              className="block text-xs font-medium focus:outline-none focus:shadow-outline">
+                <div className="bg-transparent py-2 px-4 rounded-md">Cancel</div>
+              </button>
+              <button 
+              onClick={(e) => confirmBeneficiary(e)}
+              className="block text-white text-xs font-medium focus:outline-none focus:shadow-outline">
+                <div className="bg-green-color py-2 px-4 rounded-md">Ok</div>
+              </button>
+            </aside>
+          </section>
+        </Modal>
+      }
       <div className="flex justify-between items-center">
         <div
           className="
@@ -252,7 +222,7 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
         </div>
         <div className="mt-5 auto-grid2">
           <div
-            onClick={() => toggleModal()}
+            onClick={() => toggleAddModal()}
             className="border border-dashed border-[#D7D7D7] rounded flex flex-col justify-center items-center p-4 cursor-pointer">
             <div className="w-[38px] h-[38px] rounded-full border border-green-color flex justify-center items-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-green-color">
@@ -268,7 +238,7 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
             <div
               key={beneficiary.guid}
               className="border border-[#D7D7D7] rounded flex flex-col justify-center items-center p-4 cursor-pointer"
-              onClick={() => userSelectBeneficiary({
+              onClick={(e) => userSelectBeneficiary({
                 name: beneficiary.full_name,
                 sendNumber: beneficiary.send_number,
                 service: beneficiary.service,

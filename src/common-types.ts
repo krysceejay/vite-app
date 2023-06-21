@@ -3,6 +3,7 @@ export type TNewTransfer = {
   sentCurrency: string
   payoutCurrency: string
   paymentMethod: string
+  country: string,
   rate: string
   beneficiaryName: string
   beneficiarySendNumber: string
@@ -10,7 +11,6 @@ export type TNewTransfer = {
   beneficiaryCountry: string
   deliveryMethod: string
   transferPurpose: string
-  isModalOpen: boolean
 }
 
 export type IPageState = {

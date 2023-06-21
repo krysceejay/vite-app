@@ -1,5 +1,3 @@
-import { ICountry } from "./country-types"
-
 export interface IBeneficiary {
   guid: string
   full_name: string

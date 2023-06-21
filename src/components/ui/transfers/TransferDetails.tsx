@@ -1,3 +1,4 @@
+import { ICountry } from '../../../api/types/country-types'
 import { IUser } from '../../../api/types/user-types'
 import { TNewTransfer, TPaymentMethod } from '../../../common-types'
 import Button from '../../shared/Button'
@@ -17,17 +18,19 @@ interface TransferDetailsProps {
         total: string
     }
     paymentMethodOptions: TPaymentMethod[]
+    countries: ICountry[] | undefined
 }
 
 export default function TransferDetails({
     goTo, newTransfer, handleOnchange, handleSelectChange,
     authUser, getFee, handleSelectPayment,
-    paymentMethodOptions }: TransferDetailsProps) {
+    paymentMethodOptions, countries }: TransferDetailsProps) {
     const {
         sentAmount,
         sentCurrency,
         payoutCurrency,
         paymentMethod,
+        country,
         rate,
     } = newTransfer
 
@@ -68,7 +71,9 @@ export default function TransferDetails({
                 <NewTransferSend
                     sentAmount={sentAmount}
                     currency={payoutCurrency}
+                    country={country}
                     rate={rate}
+                    countries={countries}
                     handleOnchange={handleOnchange}
                     handleSelectChange={handleSelectChange}
                     authUser={authUser}

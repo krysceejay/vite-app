@@ -14,10 +14,8 @@ type VerticalStepGroupProp = {
 const steps: VerticalStep[] = [
   { id: 1, title: "Payment Pending", text: "We are waiting for you to complete payment.", isEnd: false },
   { id: 2, title: "Payment Received", text: "We've received your payment.", isEnd: false },
-  { id: 3, title: "KYC Uploaded", text: "All required documents have been received.", isEnd: false },
-  { id: 4, title: "Documents Verified", text: "Your document(s) have been verified.", isEnd: false },
-  { id: 5, title: "Payout in Progress", text: "Payout is in progress.", isEnd: false },
-  { id: 6, title: "Paid out", text: "Payout completed", isEnd: true },
+  { id: 3, title: "Payout in Progress", text: "Payout is in progress.", isEnd: false },
+  { id: 4, title: "Paid out", text: "Payout completed", isEnd: true },
 ]
 
 export default function VerticalStepGroup({status}: VerticalStepGroupProp) {

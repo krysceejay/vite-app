@@ -12,10 +12,12 @@ import NewTransferSend from '../../components/ui/transfers/NewTransferSend'
 import { useBeneficiaryData } from '../../hooks/useBeneficiary'
 import TransferTable from '../../components/ui/transfers/TransferTable'
 import Skeleton from '../../components/shared/Skeleton'
+import { useCountryData } from '../../hooks/useCountryData'
 
 type TNewTransfer = {
   sentAmount: string
   currency: string
+  country: string
   rate: string
 }
 
@@ -25,10 +27,11 @@ export default function Dashboard() {
 
   const [newTransfer, setNewTransfer] = useState<TNewTransfer>({
     sentAmount: '',
-    currency: authUser?.country.currency || '',
+    currency: authUser?.country.currency.currency_code || '',
+    country: authUser?.country.country_name || '',
     rate: '1'
   })
-  const { sentAmount, currency, rate } = newTransfer
+  const { sentAmount, currency, country, rate } = newTransfer
 
   const { isLoading: transferIsLoading, isError: transferIsError, data: transferData } = useTransferData({})
 
@@ -36,6 +39,8 @@ export default function Dashboard() {
     queryKey: ['transfers-sent'],
     queryFn: getUserTransfersSumSent
   })
+
+  const { isLoading: countryIsLoading, data: countryData } = useCountryData()
 
   const { isLoading: beneficiaryIsLoading, isError: beneficiaryIsError, data: beneficiaryData } = useBeneficiaryData({})
 
@@ -47,7 +52,8 @@ export default function Dashboard() {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNewTransfer(prev => ({
       ...prev,
-      currency: e.target.value,
+      country: e.target.value,
+      currency: e.target.selectedOptions[0].getAttribute('data-currency') ?? prev.currency,
       rate: e.target.selectedOptions[0].getAttribute('data-rate') ?? prev.rate
     }))
   }
@@ -57,14 +63,15 @@ export default function Dashboard() {
     //  const newAmount = removeCommaFromNumber(sentAmount)
     navigate('/transfers/new', {
       state: {
-        sentAmount: sentAmount,
+        sentAmount,
         payoutCurrency: currency,
+        country,
         rate
       }
     })
   }
 
-  // if (transferIsLoading || sumSentIsLoading || beneficiaryIsLoading) return <p>Loading...</p>
+  if (countryIsLoading) return <p>Loading...</p>
   // if (getTransfers.isError) return <p>Error occurred</p>
   return (
     <section className="flex-grow overflow-hidden">
@@ -76,7 +83,9 @@ export default function Dashboard() {
             <NewTransferSend
               sentAmount={sentAmount}
               currency={currency}
+              country={country}
               rate={rate}
+              countries={countryData}
               handleOnchange={handleOnchange}
               handleSelectChange={handleSelectChange}
               handleOnclick={handleOnclick}
@@ -96,7 +105,7 @@ export default function Dashboard() {
                     {authUser ? `${authUser.first_name.charAt(0)}${authUser.last_name.charAt(0)}` : ''}
                   </div>
                 }
-                <img src={renderFlag(authUser?.country.currency)} alt="Nigeria Flag" className="rounded-full h-6 w-6 absolute bottom-0 -right-2" />
+                <img src={renderFlag(authUser?.country.country_name)} alt="Nigeria Flag" className="rounded-full h-6 w-6 absolute bottom-0 -right-2" />
               </div>
               <div className="mt-3 flex items-center space-x-1">
                 <h3 className="text-xl font-semibold capitalize">{`${authUser?.first_name} ${authUser?.last_name}`}</h3>
@@ -121,7 +130,7 @@ export default function Dashboard() {
                 </div> :
                   <p className="text-2xl mt-1 font-bold max-w-xs break-words">
                     {sumSent !== undefined ?
-                      `${authUser?.country.currency} ${numberFormat(sumSent)}`
+                      `${authUser?.country.currency.currency_code} ${numberFormat(sumSent)}`
                       : null}
                   </p>
                 }

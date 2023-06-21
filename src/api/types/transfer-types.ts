@@ -1,3 +1,5 @@
+import { MethodName } from "./payment-method-types"
+
 export interface ITransfer {
   guid: string
   transfer_id: string
@@ -9,8 +11,8 @@ export interface ITransfer {
   total_payment: number
   status: string
   user_guid: string
-  payment_method: string
-  delivery_method: string
+  payment_method: MethodName
+  delivery_method: MethodName
   transfer_purpose: string
   beneficiary_name: string
   beneficiary_send_number: string
@@ -29,11 +31,15 @@ export interface ICreatTransfer {
   sent_amount: number
   sent_currency: string
   payout_currency: string
-  transfer_purpose: string
+  transfer_purpose?: string
   beneficiary_name: string
   beneficiary_send_number: string
   beneficiary_service: string
   beneficiary_country: string
   delivery_method: string
   payment_method: string
+  payout_country_name: string
+}
+export interface IUpdateTransfer {
+  transfer_purpose: string
 }

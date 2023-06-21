@@ -11,8 +11,10 @@ import { numberFormat, removeCommaFromNumber, roundToTwoDP } from "../../../util
 import usePaymentMethodData from "../../../hooks/usePaymentMethodData"
 import { getPayoutFeesAndTotal } from "../../../api/countries"
 import { useQuery } from "@tanstack/react-query"
-import { useNewTransfer } from "../../../hooks/useTransfer"
+import { useConfirmTransfer, useNewTransfer } from "../../../hooks/useTransfer"
 import Modal from "../../../components/shared/Modal"
+import { usePaymentByTransfer } from "../../../hooks/usePayment"
+import { useCountryData } from "../../../hooks/useCountryData"
 
 export default function NewTransfer() {
   const { authUser } = useContext(AuthContext) as IAuthContext
@@ -22,30 +24,28 @@ export default function NewTransfer() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const [newTransfer, setNewTransfer] = useState<TNewTransfer>({
     sentAmount: state?.sentAmount || '',
-    sentCurrency: authUser?.country.currency || '',
-    payoutCurrency: state?.payoutCurrency || authUser?.country.currency || '',
+    sentCurrency: authUser?.country.currency.currency_code || '',
+    payoutCurrency: state?.payoutCurrency || authUser?.country.currency.currency_code || '',
     paymentMethod: '',
+    country: state?.country || authUser?.country.country_name || '',
     rate: state?.rate || '1',
     beneficiaryName: '',
     beneficiarySendNumber: '',
     beneficiaryService: '',
     beneficiaryCountry: '',
     deliveryMethod: '',
-    transferPurpose: '',
-    isModalOpen: false,
+    transferPurpose: ''
   })
   const { sentAmount, sentCurrency, payoutCurrency, paymentMethod, rate, 
     beneficiaryName, beneficiarySendNumber, beneficiaryService, beneficiaryCountry,
-     deliveryMethod, transferPurpose } = newTransfer
+     deliveryMethod, transferPurpose, country } = newTransfer
 
-  const { isLoading: paymentMethodIsLoading, data: paymentMethodData } = usePaymentMethodData()
-  if (!paymentMethodIsLoading && paymentMethodData) {
-    paymentMethodOptions = paymentMethodData.map(
-      ({
-        guid,
-        name
-      }) => ({
-        key: guid,
+  const { isLoading: countryIsLoading, data: countryData } = useCountryData()
+  
+  if (authUser) {
+    paymentMethodOptions = authUser?.country.send_payment_method.map(
+      (name, i) => ({
+        key: i.toString(),
         value: name,
         opt: name
       })
@@ -60,7 +60,8 @@ export default function NewTransfer() {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNewTransfer(prev => ({
       ...prev,
-      payoutCurrency: e.target.value,
+      country: e.target.value,
+      payoutCurrency: e.target.selectedOptions[0].getAttribute('data-currency') ?? prev.payoutCurrency,
       rate: e.target.selectedOptions[0].getAttribute('data-rate') ?? prev.rate
     }))
   }
@@ -84,7 +85,11 @@ export default function NewTransfer() {
     }))
   }
 
-  const { isLoading: newTransferIsLoading, mutate: addNewTransfer } = useNewTransfer()
+  const { isLoading: newTransferIsLoading, mutate: addNewTransfer, data } = useNewTransfer(goTo)
+
+  const { isLoading: updateTransferIsLoading, mutate: updateTransfer } = useConfirmTransfer(data?.guid)
+  
+  const { isLoading: paymentLoading, isError: paymentError, data: paymentData } = usePaymentByTransfer(data)
 
   const handleOnclick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
@@ -93,23 +98,25 @@ export default function NewTransfer() {
       sent_amount: +removeCommaFromNumber(sentAmount),
       sent_currency: sentCurrency,
       payout_currency: payoutCurrency,
-      transfer_purpose: transferPurpose,
       beneficiary_name: beneficiaryName,
       beneficiary_send_number: beneficiarySendNumber,
       delivery_method: deliveryMethod,
       beneficiary_service: beneficiaryService,
       beneficiary_country: beneficiaryCountry,
-      payment_method: paymentMethod
+      payment_method: paymentMethod,
+      payout_country_name: country
     }
     
     addNewTransfer(newTransferInput)
   }
 
-  const toggleModal = () => {
-    setNewTransfer(prev => ({
-     ...prev,
-      isModalOpen: !prev.isModalOpen
-    }))
+  const handleConfirmPay = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    const updateTransferInput = {
+      transfer_purpose: transferPurpose
+    }
+    updateTransfer(updateTransferInput)
   }
 
   const getFee = (sentAmount: string) => {
@@ -141,6 +148,7 @@ export default function NewTransfer() {
       key={1}
       goTo={goTo}
       newTransfer={newTransfer}
+      countries={countryData}
       handleOnchange={handleOnchange}
       handleSelectChange={handleSelectChange}
       handleSelectPayment={handleSelectPayment}
@@ -153,19 +161,20 @@ export default function NewTransfer() {
       goTo={goTo}
       newTransfer={newTransfer}
       handleSelectBeneficiary={handleSelectBeneficiary}
-      toggleModal={toggleModal}
-      paymentMethodOptions={paymentMethodOptions}
+      handleOnclick={handleOnclick}
     />,
     <ConfirmPay
       key={3}
-      goTo={goTo}
       handleOnchange={handleOnchange}
       newTransfer={newTransfer}
-      handleOnclick={handleOnclick}
+      paymentData={paymentData}
+      paymentLoading={paymentLoading}
+      paymentError={paymentError}
+      handleConfirmPay={handleConfirmPay}
     />
   ]
 
-  if (newTransferIsLoading) return <p>Loading...</p>
+  if (newTransferIsLoading || countryIsLoading) return <p>Loading...</p>
 
   return (
     <main className="flex-grow">
