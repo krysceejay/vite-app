@@ -8,13 +8,23 @@ import TransferTable from '../../../components/ui/transfers/TransferTable'
 export default function Transfers() {
   const [pageState, setPageState] = useState<IPageState>({
     page: 1,
-    limit: 10
+    limit: 10,
+    query: ''
   })
 
-  const { page, limit } = pageState
+  const { page, limit, query } = pageState
 
   const changePage = (num: number) => {
     setPageState(prev => ({ ...prev, page: num }))
+  }
+
+  const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    setPageState(prev => ({
+       ...prev, 
+       query: value,
+       page: 1 
+    }))
   }
 
   const { isLoading, isError, error, data: transferData } = useTransferData(pageState)
@@ -38,11 +48,14 @@ export default function Transfers() {
                     flex-1 w-full h-9 appearance-none border border-[#D7D7D7] rounded-l rounded-r-none bg-white px-3 text-[#242424] text-sm 
                     leading-tight focus:outline-none focus:shadow-none placeholder:italic"
                     type="text"
-                    name="firstname"
+                    name="query"
+                    onChange={handleOnchange}
+                    value={query}
                     placeholder="Search Transfers"
                   />
-                  <div className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">Search</div>
-                </div>
+                  <div
+                  className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">Search</div>
+                  </div>
               </div>
               <div className="py-7 px-6 md:px-10">
                 <TransferTable data={data} />

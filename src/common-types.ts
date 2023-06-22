@@ -16,6 +16,7 @@ export type TNewTransfer = {
 export type IPageState = {
   page: number
   limit: number
+  query?: string
 }
 
 export type TSelectBeneficiary = {

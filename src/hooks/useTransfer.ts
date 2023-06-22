@@ -6,10 +6,10 @@ import { createTransfer, getUserTransfer, getUserTransfers, updateTransfer } fro
 import { PaginationOptions } from '../api/types/shared-api-types'
 import { IUpdateTransfer } from '../api/types/transfer-types'
 
-export const useTransferData = ({page, limit}: PaginationOptions) => {
+export const useTransferData = ({page, limit, query}: PaginationOptions) => {
   return useQuery({
-    queryKey: ['transfers', { page, limit }],
-    queryFn: () => getUserTransfers({ page, limit }),
+    queryKey: ['transfers', { page, limit, query }],
+    queryFn: () => getUserTransfers({ page, limit, query }),
     keepPreviousData: true,
   })
 }
