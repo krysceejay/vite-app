@@ -75,7 +75,7 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
     )
   }
   
-  const { isLoading: beneficiaryIsLoading, isError: beneficiaryIsError, data: beneficiaryData } = useCountryBeneficiaryData(payoutCurrency, pageState)
+  const { isLoading: beneficiaryIsLoading, isError: beneficiaryIsError, data: beneficiaryData } = useCountryBeneficiaryData(country, pageState)
   const { isLoading: addBeneficiaryIsLoading, mutate: addNewBeneficiary } = useMutation({
     mutationFn: addBeneficiary,
     onSuccess: () => {

@@ -1,11 +1,27 @@
 import { Fragment, useState } from 'react'
+import { CSVLink } from "react-csv"
 import PageTopOne from '../../../components/shared/PageTopOne'
 import Pagination from '../../../components/shared/Pagination'
 import {useTransferData} from '../../../hooks/useTransfer'
 import { IPageState } from '../../../common-types'
 import TransferTable from '../../../components/ui/transfers/TransferTable'
+import { numberFormat } from '../../../utils/helper'
+import moment from 'moment'
+
+
+type CSVData = {
+  "Transfer ID": string
+  "Beneficiary": string
+  "Payout Method": string
+  "Sent Amount": string
+  "Payout Amount": string
+  "Date": string
+  "Payment Status": string
+}
 
 export default function Transfers() {
+  let csvData: CSVData[] = []
+
   const [pageState, setPageState] = useState<IPageState>({
     page: 1,
     limit: 10,
@@ -34,6 +50,30 @@ export default function Transfers() {
 
   const { pages, total, data } = transferData
 
+  if (data) {
+    csvData = data.map(
+      ({
+        transfer_id,
+        beneficiary_name,
+        payment_method,
+        sent_amount,
+        sent_currency,
+        payout_amount,
+        payout_currency,
+        status,
+        created_at
+      }) => ({
+        "Transfer ID": transfer_id,
+        "Beneficiary": beneficiary_name,
+        "Payout Method": payment_method,
+        "Sent Amount": `${sent_currency} ${numberFormat(sent_amount)}`,
+        "Payout Amount": `${payout_currency} ${numberFormat(payout_amount)}`,
+        "Date": moment(created_at).format('DD MMM, YYYY'),
+        "Payment Status": status
+      })
+    )
+  }
+
   return (
     <section className="flex-grow">
       <PageTopOne title="Transfers" buttonText="New Transfer" link="/transfers/new" hasBtn />
@@ -45,7 +85,7 @@ export default function Transfers() {
                 <div className="w-full sm:w-2/3 md:w-1/2 flex items-center px-6 md:px-10">
                   <input
                     className="
-                    flex-1 w-full h-9 appearance-none border border-[#D7D7D7] rounded-l rounded-r-none bg-white px-3 text-[#242424] text-sm 
+                    flex-1 w-full h-9 appearance-none border border-[#D7D7D7] rounded bg-white px-3 text-[#242424] text-sm 
                     leading-tight focus:outline-none focus:shadow-none placeholder:italic"
                     type="text"
                     name="query"
@@ -53,15 +93,21 @@ export default function Transfers() {
                     value={query}
                     placeholder="Search Transfers"
                   />
-                  <div
-                  className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">Search</div>
-                  </div>
+                  {/* <div
+                  className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">
+                    Search
+                  </div> */}
+                </div>
               </div>
               <div className="py-7 px-6 md:px-10">
                 <TransferTable data={data} />
               </div>
               <div className="py-6 px-6 md:px-10 border-t border-t-[#F5F6FA] flex flex-col-reverse md:flex-row justify-between md:items-center">
-                <h3 className="text-green-color cursor-pointer text-xs py-2">Download as CSV</h3>
+                <CSVLink 
+                  filename={"transfers.csv"}
+                  data={csvData}>
+                  <h3 className="text-green-color cursor-pointer text-xs py-2">Download as CSV</h3>
+                </CSVLink>
                 {/* <Pagination /> */}
                 {pages > 1 &&
                   <Pagination page={page} pages={pages} limit={limit} changePage={changePage} totalRecords={total} />

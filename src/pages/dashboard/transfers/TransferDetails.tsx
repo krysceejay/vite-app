@@ -1,24 +1,50 @@
-import { useQuery } from '@tanstack/react-query'
+import { useRef } from 'react'
 import moment from 'moment'
-import { useParams } from 'react-router-dom'
-import { isAxiosError } from 'axios'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useReactToPrint } from 'react-to-print'
 import { toast } from 'react-toastify'
-import { getUserTransfer } from '../../../api/transfers'
 
 import Button from '../../../components/shared/Button'
-import VerticalStep from '../../../components/ui/transfers/VerticalStep'
 import { useTransferDetails } from '../../../hooks/useTransfer'
-import { numberFormat, roundToTwoDP } from '../../../utils/helper'
+import { numberFormat } from '../../../utils/helper'
 import VerticalStepGroup from '../../../components/ui/transfers/VerticalStep'
 import NotFound from '../../NotFound'
+import { TransferStatus } from '../../../api/types/transfer-types'
 
 export default function TransferDetails() {
   let { id } = useParams()
+  const componentRef = useRef<HTMLDivElement>(null)
+  const navigate = useNavigate()
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  })
 
   const { isLoading, data: transferData } = useTransferDetails(id)
 
   if (isLoading) return <p>Loading...</p>
   if (!transferData) return <NotFound />
+
+  const handleRepeatTransfer = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    if(transferData.status.toLowerCase() === TransferStatus.PAYMENT_PENDING.toLowerCase()) {
+      toast.error('You can not repeat a pending transfer, Kindly try again when payment is received.')
+      return
+    }
+
+    navigate('/transfers/new', {
+      state: {
+        step: 1,
+        sentAmount: transferData.sent_amount,
+        sentCurrency: transferData.sent_currency,
+        payoutCurrency: transferData.payout_currency,
+        paymentMethod: transferData.payment_method,
+        country: transferData.beneficiary_country,
+        rate: transferData.rate
+      }
+    })
+  }
   
   return (
     <main className="flex-grow">
@@ -28,7 +54,9 @@ export default function TransferDetails() {
           <h1 className="text-xl sm:text-2xl font-semibold">#{transferData.transfer_id}</h1>
         </div>
         <div className="flex items-center space-x-2 max-[545px]:mt-4">
-          <Button>
+          <Button
+          onClick={handlePrint}
+          >
             <div className="flex items-center space-x-2 bg-transparent border border-text-color text-text-color py-2 sm:py-3 px-4 rounded-md">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -36,7 +64,9 @@ export default function TransferDetails() {
               <span className="min-[320px]:whitespace-nowrap">Download PDF</span>
             </div>
           </Button>
-          <Button>
+          <Button
+          onClick={handleRepeatTransfer}
+          >
             <div className="flex items-center space-x-2 bg-green-color border border-green-color py-2 sm:py-3 px-4 rounded-md">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -47,7 +77,9 @@ export default function TransferDetails() {
         </div>
       </section>
       <section className="flex flex-col md:flex-row items-start md:space-x-3.5 mt-9">
-        <div className="bg-white md:flex-1 rounded px-6 xl:px-24 py-11 w-full">
+        <div 
+        ref={componentRef}
+        className="bg-white md:flex-1 rounded px-6 xl:px-24 py-11 w-full">
           <div>
             <h3 className="text-base">Payment Details</h3>
             <div className="mt-3 whitespace-break-spaces">
