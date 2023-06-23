@@ -8,11 +8,7 @@ import { useLocation } from "react-router-dom"
 import AuthContext, { IAuthContext } from "../../../context/authContext"
 import { TNewTransfer, TPaymentMethod, TSelectBeneficiary } from "../../../common-types"
 import { numberFormat, removeCommaFromNumber, roundToTwoDP } from "../../../utils/helper"
-import usePaymentMethodData from "../../../hooks/usePaymentMethodData"
-import { getPayoutFeesAndTotal } from "../../../api/countries"
-import { useQuery } from "@tanstack/react-query"
 import { useConfirmTransfer, useNewTransfer } from "../../../hooks/useTransfer"
-import Modal from "../../../components/shared/Modal"
 import { usePaymentByTransfer } from "../../../hooks/usePayment"
 import { useCountryData } from "../../../hooks/useCountryData"
 
@@ -21,19 +17,19 @@ export default function NewTransfer() {
   const { state } = useLocation()
   let paymentMethodOptions: TPaymentMethod[] = []
 
-  const [currentStepIndex, setCurrentStepIndex] = useState(0)
+  const [currentStepIndex, setCurrentStepIndex] = useState(state?.step || 0)
   const [newTransfer, setNewTransfer] = useState<TNewTransfer>({
     sentAmount: state?.sentAmount || '',
     sentCurrency: authUser?.country.currency.currency_code || '',
     payoutCurrency: state?.payoutCurrency || authUser?.country.currency.currency_code || '',
-    paymentMethod: '',
+    paymentMethod: state?.paymentMethod || '',
     country: state?.country || authUser?.country.country_name || '',
     rate: state?.rate || '1',
-    beneficiaryName: '',
-    beneficiarySendNumber: '',
-    beneficiaryService: '',
-    beneficiaryCountry: '',
-    deliveryMethod: '',
+    beneficiaryName: state?.beneficiaryName || '',
+    beneficiarySendNumber: state?.beneficiarySendNumber || '',
+    beneficiaryService: state?.beneficiaryService || '',
+    beneficiaryCountry: state?.beneficiaryCountry || '',
+    deliveryMethod: state?.deliveryMethod || '',
     transferPurpose: ''
   })
   const { sentAmount, sentCurrency, payoutCurrency, paymentMethod, rate, 

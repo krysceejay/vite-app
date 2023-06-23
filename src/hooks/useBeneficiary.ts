@@ -1,21 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {isAxiosError} from 'axios'
 import { toast } from 'react-toastify'
-import { addBeneficiary, getUserBeneficiaries, getUserBeneficiariesByCurrency } from '../api/beneficiaries'
+import { addBeneficiary, getUserBeneficiaries, getUserBeneficiariesByCountry } from '../api/beneficiaries'
 import { PaginationOptions } from '../api/types/shared-api-types'
 
-export const useBeneficiaryData = ({page, limit}: PaginationOptions) => {
+export const useBeneficiaryData = ({page, limit, query}: PaginationOptions) => {
   return useQuery({
-    queryKey: ['beneficiaries', { page, limit }],
-    queryFn: () => getUserBeneficiaries({ page, limit }),
+    queryKey: ['beneficiaries', { page, limit, query }],
+    queryFn: () => getUserBeneficiaries({ page, limit, query }),
     keepPreviousData: true,
   })
 }
 
-export const useCountryBeneficiaryData = (currency: string, {page, limit}: PaginationOptions) => {
+export const useCountryBeneficiaryData = (country: string, {page, limit, query}: PaginationOptions) => {
   return useQuery({
-    queryKey: ['beneficiaries', currency, { page, limit }],
-    queryFn: () => getUserBeneficiariesByCurrency(currency, { page, limit }),
+    queryKey: ['beneficiaries', country, { page, limit, query }],
+    queryFn: () => getUserBeneficiariesByCountry(country, { page, limit, query }),
     keepPreviousData: true,
   })
 }

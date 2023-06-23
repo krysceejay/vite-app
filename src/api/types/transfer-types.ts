@@ -1,5 +1,12 @@
 import { MethodName } from "./payment-method-types"
 
+export enum TransferStatus {
+  PAID_OUT = "paid out",
+  PAYMENT_PENDING = "payment pending",
+  PAYMENT_RECEIVED = "payment received",
+  PAYOUT_INPROGRESS = "payout in progress",
+}
+
 export interface ITransfer {
   guid: string
   transfer_id: string
@@ -9,7 +16,7 @@ export interface ITransfer {
   payout_currency: string
   fees: number
   total_payment: number
-  status: string
+  status: TransferStatus
   user_guid: string
   payment_method: MethodName
   delivery_method: MethodName

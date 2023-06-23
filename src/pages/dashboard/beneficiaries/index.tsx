@@ -20,7 +20,8 @@ export default function Beneficiaries() {
   let countryOptions: TCountry[] = []
   const [pageState, setPageState] = useState<IPageState>({
     page: 1,
-    limit: 10
+    limit: 10,
+    query: ''
   })
 
   const [formData, setFormData] = useState<TAddBeneficiaryInput>({
@@ -35,11 +36,20 @@ export default function Beneficiaries() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   const { bfullName, bsendNumber, service, bdeliveryMethod, countryName, countryCurrency } = formData
-  const { page, limit } = pageState
+  const { page, limit, query } = pageState
 
 
   const changePage = (num: number) => {
     setPageState(prev => ({ ...prev, page: num }))
+  }
+
+  const handleOnchangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    setPageState(prev => ({
+       ...prev, 
+       query: value,
+       page: 1 
+    }))
   }
 
   const toggleModal = () => {
@@ -91,7 +101,7 @@ export default function Beneficiaries() {
       }) => ({
         key: guid,
         value: country_name,
-        datacurrency: currency,
+        datacurrency: currency.currency_code,
         opt: country_name
       })
     )
@@ -101,6 +111,17 @@ export default function Beneficiaries() {
     mutationFn: addBeneficiary,
     onSuccess: () => {
       toggleModal()
+      
+      setFormData(prev => ({
+        ...prev,
+        bfullName: '',
+        bsendNumber: '',
+        service: '',
+        bdeliveryMethod: '',
+        countryName: '',
+        countryCurrency: ''
+      }))
+
       queryClient.invalidateQueries(['beneficiaries'])
     },
     onError: (err) => {
@@ -163,13 +184,15 @@ export default function Beneficiaries() {
             <div className="w-full sm:w-2/3 md:w-1/2 flex items-center px-6 md:px-10">
               <input
                 className="
-                    flex-1 w-full h-9 appearance-none border border-[#D7D7D7] rounded-l rounded-r-none bg-white px-3 text-[#242424] text-sm 
+                    flex-1 w-full h-9 appearance-none border border-[#D7D7D7] rounded bg-white px-3 text-[#242424] text-sm 
                     leading-tight focus:outline-none focus:shadow-none placeholder:italic"
                 type="text"
-                name="firstname"
+                name="query"
+                onChange={handleOnchangeQuery}
+                value={query}
                 placeholder="Search Beneficiaries"
               />
-              <div className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">Search</div>
+              {/* <div className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">Search</div> */}
             </div>
           </div>
           <div className="min-h-[400px]">
