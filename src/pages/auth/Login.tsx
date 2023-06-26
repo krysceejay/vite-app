@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { currentUser, signIn } from '../../api/users'
 
 import Button from '../../components/shared/Button'
 import { FormInput } from '../../components/shared/Form'
+import useAuth from '../../hooks/useAuth'
 
 interface ILoginInput {
   uemail: string
@@ -14,6 +15,11 @@ interface ILoginInput {
 }
 
 export default function Login() {
+  const {persist, setAuth, setPersist} = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/dashboard'
+
   const [formData, setFormData] = useState<ILoginInput>({
     uemail: '',
     upassword: ''
@@ -21,11 +27,8 @@ export default function Login() {
 
   const { uemail, upassword } = formData
 
-  const { isLoading, mutate: loginUser, data } = useMutation({
+  const { isLoading, mutate: loginUser, data: loginData } = useMutation({
     mutationFn: signIn,
-    onSuccess: () => {
-      toast.success('Login successful')
-    },
     onError: (err) => {
       if (isAxiosError(err)) {
         toast.error(err.response?.data.message)
@@ -38,7 +41,12 @@ export default function Login() {
   useQuery({
     queryKey: ['current-user'],
     queryFn: () => currentUser(),
-    enabled: !!data,
+    onSuccess: (data) => {
+      setAuth(data)
+      navigate(from, {replace: true})
+      toast.success('Login successful')
+    },
+    enabled: !!loginData,
   })
 
   const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +62,15 @@ export default function Login() {
     }
     loginUser(loginInput)
   }
+
+  const togglePersist = () => {
+    setPersist(prev => !prev)
+  }
+
+  useEffect(() => {
+    localStorage.setItem('persist', JSON.stringify(persist))
+  }, [persist])
+  
 
   return (
     <section className="h-[86vh]">
@@ -86,7 +103,14 @@ export default function Login() {
                 errorMessage="Password is required"
               />
             </div>
-            <Link to="/" className="text-xs text-green-color mt-5">Forgot Password?</Link>
+            <div className="flex mt-4 space-x-2">
+              <input 
+              onChange={togglePersist}
+              checked={persist}
+              className="leading-tight accent-green-color" type="checkbox" />
+              <span className="text-xs font-medium">Trust this device?</span>
+            </div>
+            <Link to="/" className="text-xs text-green-color mt-5 inline-block">Forgot Password?</Link>
             <div className="mt-3">
               <Button type="submit" disabled={isLoading}>
                 <div className="bg-green-color py-3 px-4 rounded-md flex items-center justify-center">

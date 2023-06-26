@@ -5,7 +5,7 @@ import Beneficiary from '../../../components/ui/transfers/Beneficiary'
 import ConfirmPay from '../../../components/ui/transfers/ConfirmPay'
 import PageTopOne from "../../../components/shared/PageTopOne"
 import { useLocation } from "react-router-dom"
-import AuthContext, { IAuthContext } from "../../../context/authContext"
+import AuthContext, { IAuthContext } from "../../../context/AuthContext"
 import { TNewTransfer, TPaymentMethod, TSelectBeneficiary } from "../../../common-types"
 import { numberFormat, removeCommaFromNumber, roundToTwoDP } from "../../../utils/helper"
 import { useConfirmTransfer, useNewTransfer } from "../../../hooks/useTransfer"

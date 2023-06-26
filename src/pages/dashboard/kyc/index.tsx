@@ -7,13 +7,16 @@ import Button from '../../../components/shared/Button'
 import { FormInput } from '../../../components/shared/Form'
 import Modal from '../../../components/shared/Modal'
 import PageTopOne from '../../../components/shared/PageTopOne'
-import useKycData from '../../../hooks/useKycData'
+import {useKycData} from '../../../hooks/useKycData'
+import VerifyDoc from '../../../components/ui/kyc/VerifyDoc'
 
 type TKycState = {
   upload: File | null
   title: string
   document_name: string
+  country: string
   isModalOpen: boolean
+  showSmileId: boolean
 }
 
 export default function KYCDocuments() {
@@ -22,10 +25,12 @@ export default function KYCDocuments() {
     upload: null,
     document_name: '',
     title: '',
-    isModalOpen: false
+    country: '',
+    isModalOpen: false,
+    showSmileId: false
   })
 
-  const { title, document_name, upload, isModalOpen } = formData
+  const { title, document_name, upload, isModalOpen, country, showSmileId } = formData
 
   const openModal = (t: string) => {
     setFormData(prev => ({
@@ -38,7 +43,12 @@ export default function KYCDocuments() {
   const closeModal = () => {
     setFormData(prev => ({
       ...prev,
-      isModalOpen: false
+      upload: null,
+      document_name: '',
+      title: '',
+      country: '',
+      isModalOpen: false,
+      showSmileId: false
     }))
   }
 
@@ -64,7 +74,7 @@ export default function KYCDocuments() {
       file.type !== 'image/png' &&
       file.type !== 'application/pdf'
     ) {
-      return toast.error('File format is incorrect. Kindly up a pdf, jpeg, jpg or png')
+      return toast.error('File format is incorrect. Kindly upload a pdf, jpeg, jpg or png')
     }
 
     setFormData(prev => ({
@@ -109,6 +119,18 @@ export default function KYCDocuments() {
     addNewKyc(newUpload)
   }
 
+  const handleContinue = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    if (!country || !title) {
+      toast.error('Kindly provide all required fields before you proceed.')
+      return
+    }
+    setFormData(prev => ({
+      ...prev,
+      showSmileId: true
+    }))
+  }
+
   if (kycIsLoading) return <p>Loading...</p>
   if (kycIsError) return <p>Error occurred</p>
 
@@ -120,6 +142,7 @@ export default function KYCDocuments() {
       <PageTopOne title="KYC Documents" hasBtn={false} link="/" />
       {isModalOpen &&
         <Modal hide={() => closeModal()}>
+          {document_name == 'Proof of Address' ?
           <form className="w-full my-8" onSubmit={handleSubmit}>
             <h3 className="text-xl font-medium capitalize">{document_name}</h3>
             <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
@@ -129,7 +152,7 @@ export default function KYCDocuments() {
                 name="title"
                 value={title}
                 onChange={handleOnchange}
-                placeholder="Add file title"
+                placeholder="Add file title e.g Utility bill"
               />
             </div>
             <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
@@ -156,13 +179,55 @@ export default function KYCDocuments() {
               </Button>
             </div>
           </form>
+          :
+          <div className="w-full my-8">
+            <h3 className="text-xl font-medium capitalize">{document_name}</h3>
+            {showSmileId ? <div className="pt-4 pb-10">
+              <VerifyDoc country={country} title={title} />
+            </div> :
+            <div>
+              <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
+                <FormInput
+                  label="Document title"
+                  type="text"
+                  name="title"
+                  value={title}
+                  onChange={handleOnchange}
+                  required
+                  placeholder="Add ID title e.g International Passport"
+                />
+              </div>
+              <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
+                <FormInput
+                  label="Country"
+                  type="text"
+                  name="country"
+                  value={country}
+                  onChange={handleOnchange}
+                  required
+                  placeholder="Add country where ID was issued"
+                />
+              </div>
+              <div className="mt-3">
+                <Button
+                onClick={handleContinue}
+                >
+                  <div className="bg-green-color py-3 px-4 rounded-md flex items-center justify-center">
+                    <span className="font-medium">Next</span>
+                  </div>
+                </Button>
+              </div>
+            </div>
+            }
+          </div>
+          }
         </Modal>
       }
-      <section className="bg-white rounded-md mt-9 py-3.5 overflow-hidden">
-        <div className="p-6 sm:px-10 auto-grid">
+      <section className="bg-white rounded-md mt-9 py-8 overflow-hidden">
+        <div className="p-6 sm:px-10 flex flex-col justify-center items-center space-y-4">
           <div
             onClick={() => openModal('Proof of Identity')}
-            className="border border-[#D7D7D7] rounded-md flex flex-col justify-center items-center px-4 py-7 bg-white cursor-pointer">
+            className="border border-[#f4f4f4] rounded-md flex flex-col justify-center items-center px-4 py-7 w-full max-w-xs bg-white cursor-pointer">
             <img src="/asset/img/securityg.png" alt="Identity Proof" className="mx-auto h-[35px] w-[30px]" />
             <div className="mt-4 text-center">
               <p className="text-sm font-semibold">Proof of Identity</p>
@@ -180,7 +245,7 @@ export default function KYCDocuments() {
           </div>
           <div
             onClick={() => openModal('Proof of Address')}
-            className="border border-[#D7D7D7] rounded-md flex flex-col justify-center items-center px-4 py-7 bg-white cursor-pointer">
+            className="border border-[#f4f4f4] rounded-md flex flex-col justify-center items-center px-4 py-7 w-full max-w-xs bg-white cursor-pointer">
             <img src="/asset/img/securityy.png" alt="Address Proof" className="mx-auto h-[35px] w-[30px]" />
             <div className="mt-4 text-center">
               <p className="text-sm font-semibold">Proof of Address</p>
