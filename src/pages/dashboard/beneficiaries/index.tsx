@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { isAxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import { addBeneficiary } from '../../../api/beneficiaries'
@@ -13,16 +13,20 @@ import {useCountryData} from '../../../hooks/useCountryData'
 import usePaymentMethodData from '../../../hooks/usePaymentMethodData'
 import renderFlag from '../../../utils/flags'
 import { stringToHslColor } from '../../../utils/helper'
+import { useSearchParams } from 'react-router-dom'
 
 export default function Beneficiaries() {
   const queryClient = useQueryClient()
   let paymentMethodOptions: TPaymentMethod[] = []
   let countryOptions: TCountry[] = []
-  const [pageState, setPageState] = useState<IPageState>({
-    page: 1,
-    limit: 10,
-    query: ''
-  })
+  
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const query = searchParams.get('query') || ''
+  const page = searchParams.get('page') || '1'
+  const limit = searchParams.get('limit') || '10'
+
+  const ref = useRef<HTMLInputElement>(null)
 
   const [formData, setFormData] = useState<TAddBeneficiaryInput>({
     bfullName: '',
@@ -36,20 +40,32 @@ export default function Beneficiaries() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   const { bfullName, bsendNumber, service, bdeliveryMethod, countryName, countryCurrency } = formData
-  const { page, limit, query } = pageState
-
 
   const changePage = (num: number) => {
-    setPageState(prev => ({ ...prev, page: num }))
+    if(!searchParams.get('query')) {
+      setSearchParams({
+        page: num.toString() 
+      })
+    }else {
+      setSearchParams({
+        query: ref.current?.value || '',
+        page: num.toString()
+      })
+    }
   }
 
-  const handleOnchangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
-    setPageState(prev => ({
-       ...prev, 
-       query: value,
-       page: 1 
-    }))
+  const handleClick = () => {
+    setSearchParams({
+      query: ref.current?.value || '',
+      page: '1'
+    })
+  }
+
+  const handleClear = () => {
+    if(ref.current){
+      ref.current.value = ''
+    }
+    setSearchParams({})
   }
 
   const toggleModal = () => {
@@ -76,7 +92,7 @@ export default function Beneficiaries() {
     }))
   }
 
-  const { isLoading: beneficiaryIsLoading, isError: beneficiaryIsError, data: beneficiaryData } = useBeneficiaryData(pageState)
+  const { isLoading: beneficiaryIsLoading, isError: beneficiaryIsError, data: beneficiaryData } = useBeneficiaryData({page: +page, limit: +limit, query})
   const { isLoading: paymentMethodIsLoading, data: paymentMethodData } = usePaymentMethodData()
   if (!paymentMethodIsLoading && paymentMethodData) {
     paymentMethodOptions = paymentMethodData.map(
@@ -182,20 +198,37 @@ export default function Beneficiaries() {
         <div className="bg-white rounded-md overflow-hidden">
           <div className="py-10 border-b border-b-[#F5F6FA] w-full">
             <div className="w-full sm:w-2/3 md:w-1/2 flex items-center px-6 md:px-10">
-              <input
-                className="
-                    flex-1 w-full h-9 appearance-none border border-[#D7D7D7] rounded bg-white px-3 text-[#242424] text-sm 
-                    leading-tight focus:outline-none focus:shadow-none placeholder:italic"
-                type="text"
-                name="query"
-                onChange={handleOnchangeQuery}
-                value={query}
-                placeholder="Search Beneficiaries"
-              />
-              {/* <div className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">Search</div> */}
+              <div className="relative w-full">
+                <input
+                  ref={ref}
+                  className="
+                      flex-1 w-full h-9 appearance-none border border-[#D7D7D7] rounded-l rounded-r-none bg-white px-3 text-[#242424] text-sm 
+                      leading-tight focus:outline-none focus:shadow-none placeholder:italic"
+                  type="text"
+                  name="query"
+                  // onChange={handleOnchangeQuery}
+                  // value={query}
+                  placeholder="Search Beneficiaries"
+                />
+                {query &&
+                  <div 
+                    onClick={() => handleClear()}
+                    className="absolute top-1.5 right-3 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-[#D7D7D7]">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                }
+              </div>
+              <div 
+                onClick={() => handleClick()}
+                className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">
+                Search
+              </div>
             </div>
           </div>
           <div className="min-h-[400px]">
+          {data.length === 0 ? <div className="h-52 flex justify-center items-center">No Beneficiary</div> :
             <div className="p-6 sm:px-10 auto-grid">
               {data.map(beneficiary =>
                 <div key={beneficiary.guid} className="border border-[#D7D7D7] rounded flex flex-col justify-center items-center px-4 py-5 bg-white">
@@ -215,14 +248,15 @@ export default function Beneficiaries() {
                   </div>
                 </div>
               )}
-            </div>
+            </div> 
+            }
           </div>
           <div className="py-6 px-6 md:px-10 border-t border-t-[#F5F6FA] flex justify-end items-center">
             {pages > 1 &&
               <Pagination
-                page={page}
+                page={+page}
                 pages={pages}
-                limit={limit}
+                limit={+limit}
                 changePage={changePage}
                 totalRecords={total}
                 showDetails={false}

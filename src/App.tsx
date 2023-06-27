@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom'
 //Layout
 import MainLayout from './components/layouts/Main'
 import DashboardLayout from './components/layouts/User'
+import Persist from './components/layouts/Persist'
 
 //Auth
 const Login = lazy(() => import('./pages/auth/Login'))
@@ -23,40 +24,45 @@ import Help from './pages/dashboard/help'
 // Info
 import NotFound from './pages/NotFound'
 import AccountCreated from './pages/AccountCreated'
+import AppLayout from './components/layouts/AppLayout'
 
 
 function App() {
   return (
     <Routes>
-      <Route element={<DashboardLayout />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="transfers" element={<Transfers />} />
-        <Route path="transfers/:id" element={<TransferDetails />} />
-        <Route path="transfers/new" element={<NewTransfer />} />
-        <Route path="beneficiaries" element={<Beneficiaries />} />
-        <Route path="kyc" element={<KYCDocuments />} />
-        <Route path="messages" element={<Messages />} />
-        <Route path="help" element={<Help />} />
+      <Route path="/" element={<AppLayout />}>
+        <Route element={<Persist />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="transfers" element={<Transfers />} />
+            <Route path="transfers/:id" element={<TransferDetails />} />
+            <Route path="transfers/new" element={<NewTransfer />} />
+            <Route path="beneficiaries" element={<Beneficiaries />} />
+            <Route path="kyc" element={<KYCDocuments />} />
+            <Route path="messages" element={<Messages />} />
+            <Route path="help" element={<Help />} />
+          </Route>
+        </Route>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Login />
+            </Suspense>
+          } />
+          <Route path="signup" element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Signup />
+            </Suspense>
+          } />
+          <Route path="forgot-password" element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <ForgotPassword />
+            </Suspense>
+          } />
+          <Route path="account-successful" element={<AccountCreated />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
       </Route>
-      <Route element={<MainLayout />}>
-        <Route path="/" element={
-          <Suspense fallback={<div>Loading...</div>}>
-            <Login />
-          </Suspense>
-        } />
-        <Route path="signup" element={
-          <Suspense fallback={<div>Loading...</div>}>
-            <Signup />
-          </Suspense>
-        } />
-        <Route path="forgot-password" element={
-          <Suspense fallback={<div>Loading...</div>}>
-            <ForgotPassword />
-          </Suspense>
-        } />
-        <Route path="account-successful" element={<AccountCreated />} />
-      </Route>
-      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }

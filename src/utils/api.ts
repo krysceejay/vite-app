@@ -26,10 +26,10 @@ const apiFile = axios.create({
 api.interceptors.response.use(
   res => res,
   err => {
-    // if (err.response.status === 401) {
-    //   // store.dispatch({type: LOGOUT});
-    //   console.clear()
-    // }
+    if (err.response.status === 401) {
+      window.location.replace('/')
+      // navigate('/', {state: {from: location}, replace: true})
+    }
     //console.clear()
     return Promise.reject(err);
   },

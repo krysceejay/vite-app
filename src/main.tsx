@@ -1,13 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import App from './App'
 import './index.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ToastContainer, Zoom } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { AuthContextProvider } from './context/authContext'
+import { AuthContextProvider } from './context/AuthContext'
+import {disableReactDevTools} from './disableReactDevTools'
+
+if(process.env.NODE_ENV === "production") {
+  disableReactDevTools()
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,7 +36,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
-          <App />
+          <Routes>
+            <Route path="/*" element={<App />} />
+          </Routes>
         </AuthContextProvider>
         <ToastContainer
           theme="dark"

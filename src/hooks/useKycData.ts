@@ -1,11 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
-import { getUserKyc } from '../api/kyc'
+import { checkUserKycVerified, getUserKyc } from '../api/kyc'
 
-const useKycData = () => {
+export const useKycData = () => {
   return useQuery({
     queryKey: ['kyc'],
     queryFn: () => getUserKyc(),
   })
 }
 
-export default useKycData
+export const useCheckKycData = () => {
+  return useQuery({
+    queryKey: ['kyc-verified'],
+    queryFn: () => checkUserKycVerified(),
+  })
+}

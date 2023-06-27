@@ -13,6 +13,10 @@ export function currentUser(): Promise<IUser> {
   return getData('/auth/profile')
 }
 
+// export function getCurrentUser(controller): Promise<IUser> {
+//   return getData('/auth/profile')
+// }
+
 export function signOut(): Promise<ILogoutResponse> {
   return postData('/auth/logout', {})
 }
