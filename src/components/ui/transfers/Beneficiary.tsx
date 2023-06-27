@@ -24,7 +24,8 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
   const { payoutCurrency, beneficiaryName, beneficiarySendNumber, deliveryMethod, beneficiaryCountry, country } = newTransfer
   const [pageState, setPageState] = useState<IPageState>({
     page: 1,
-    limit: 10
+    limit: 10,
+    query: ''
   })
 
   const [formData, setFormData] = useState<TAddBeneficiaryInput>({
@@ -43,10 +44,19 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
 
   const { bfullName, bsendNumber, service, bdeliveryMethod } = formData
 
-  const { page, limit } = pageState
+  const { page, limit, query } = pageState
 
   const changePage = (num: number) => {
     setPageState(prev => ({ ...prev, page: num }))
+  }
+
+  const handleOnchangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {value} = e.target
+    setPageState(prev => ({
+      ...prev, 
+      query: value,
+      page: 1 
+    }))
   }
 
   const toggleAddModal = () => {
@@ -212,13 +222,15 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
         <div className="w-full p-4 rounded-md flex items-center">
           <input
             className="
-                    flex-1 w-full h-9 appearance-none border border-[#D7D7D7] rounded-l rounded-r-none bg-white px-3 text-[#242424] text-sm 
-                    leading-tight focus:outline-none focus:shadow-none placeholder:italic"
+              flex-1 w-full h-9 appearance-none border border-[#D7D7D7] rounded bg-white px-3 text-[#242424] text-sm 
+              leading-tight focus:outline-none focus:shadow-none placeholder:italic"
             type="text"
-            name="firstname"
+            name="query"
+            onChange={handleOnchangeQuery}
+            value={query}
             placeholder="Search Beneficiaries"
           />
-          <div className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">Search</div>
+          {/* <div className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">Search</div> */}
         </div>
         <div className="mt-5 auto-grid2">
           <div
@@ -238,7 +250,7 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
             <div
               key={beneficiary.guid}
               className="border border-[#D7D7D7] rounded flex flex-col justify-center items-center p-4 cursor-pointer"
-              onClick={(e) => userSelectBeneficiary({
+              onClick={() => userSelectBeneficiary({
                 name: beneficiary.full_name,
                 sendNumber: beneficiary.send_number,
                 service: beneficiary.service,

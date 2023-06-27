@@ -11,6 +11,20 @@ export const useTransferData = ({page, limit, query}: PaginationOptions) => {
     queryKey: ['transfers', { page, limit, query }],
     queryFn: () => getUserTransfers({ page, limit, query }),
     keepPreviousData: true,
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        const resErrors = err.response?.data.message
+        if (Array.isArray(resErrors)) {
+          resErrors.forEach((er: { field: string, error: string }) => {
+            toast.error(er.error.replace(/_/g, ' '))
+          })
+        }else {
+          toast.error(resErrors)
+        }
+      } else {
+        console.log('unexpected', err)
+      }
+    }
   })
 }
 

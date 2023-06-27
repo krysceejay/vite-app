@@ -1,7 +1,5 @@
-import React, { createContext, useEffect, useState } from 'react'
-import { currentUser, signIn, signOut } from '../api/users'
-import { ILogin, IUser } from '../api/types/user-types'
-import { useQuery } from '@tanstack/react-query'
+import React, { createContext, useState } from 'react'
+import { IUser } from '../api/types/user-types'
 
 export interface IAuthContext {
   authUser: IUser | null
@@ -24,13 +22,6 @@ export const AuthContextProvider = ({ children }: AuthContextProps) => {
     if(!getPersist) return false
     return true
   })
-
-  // const { isLoading, data: authUser } = useQuery({
-  //   queryKey: ['current-user'],
-  //   queryFn: () => currentUser(),
-  //   // refetchOnWindowFocus: false,
-  //   retry: false,
-  // })
 
   return (
     <AuthContext.Provider value={{ authUser, persist, setAuth, setPersist }}>
