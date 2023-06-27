@@ -9,6 +9,20 @@ export const useBeneficiaryData = ({page, limit, query}: PaginationOptions) => {
     queryKey: ['beneficiaries', { page, limit, query }],
     queryFn: () => getUserBeneficiaries({ page, limit, query }),
     keepPreviousData: true,
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        const resErrors = err.response?.data.message
+        if (Array.isArray(resErrors)) {
+          resErrors.forEach((er: { field: string, error: string }) => {
+            toast.error(er.error.replace(/_/g, ' '))
+          })
+        }else {
+          toast.error(resErrors)
+        }
+      } else {
+        console.log('unexpected', err)
+      }
+    }
   })
 }
 
@@ -17,6 +31,20 @@ export const useCountryBeneficiaryData = (country: string, {page, limit, query}:
     queryKey: ['beneficiaries', country, { page, limit, query }],
     queryFn: () => getUserBeneficiariesByCountry(country, { page, limit, query }),
     keepPreviousData: true,
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        const resErrors = err.response?.data.message
+        if (Array.isArray(resErrors)) {
+          resErrors.forEach((er: { field: string, error: string }) => {
+            toast.error(er.error.replace(/_/g, ' '))
+          })
+        }else {
+          toast.error(resErrors)
+        }
+      } else {
+        console.log('unexpected', err)
+      }
+    }
   })
 }
 

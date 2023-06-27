@@ -228,7 +228,7 @@ export default function Beneficiaries() {
             </div>
           </div>
           <div className="min-h-[400px]">
-          {total === 0 ? <div className="h-52 flex justify-center items-center">No Beneficiary</div> :
+          {data.length === 0 ? <div className="h-52 flex justify-center items-center">No Beneficiary</div> :
             <div className="p-6 sm:px-10 auto-grid">
               {data.map(beneficiary =>
                 <div key={beneficiary.guid} className="border border-[#D7D7D7] rounded flex flex-col justify-center items-center px-4 py-5 bg-white">
