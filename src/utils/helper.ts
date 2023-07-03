@@ -47,3 +47,11 @@ export const stringToHslColor = (str: string = 'vargent') => {
 export const roundToTwoDP = (num: number): number => {
   return Math.round((num + Number.EPSILON) * 100) / 100
 }
+
+export const truncate = (input: string, len: number) => {
+  if (input?.length > len){
+    return `${input.substring(0, len)}...`
+  }else{
+    return input
+  } 
+}

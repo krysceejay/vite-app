@@ -9,6 +9,7 @@ import { ToastContainer, Zoom } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { AuthContextProvider } from './context/AuthContext'
 import {disableReactDevTools} from './disableReactDevTools'
+import './i18n'
 
 if(process.env.NODE_ENV === "production") {
   disableReactDevTools()

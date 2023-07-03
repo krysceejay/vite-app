@@ -10,8 +10,10 @@ import { numberFormat } from '../../../utils/helper'
 import VerticalStepGroup from '../../../components/ui/transfers/VerticalStep'
 import NotFound from '../../NotFound'
 import { TransferStatus } from '../../../api/types/transfer-types'
+import useTranslate from '../../../hooks/useTranslate'
 
 export default function TransferDetails() {
+  const {t} = useTranslate()
   let { id } = useParams()
   const componentRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
@@ -50,7 +52,7 @@ export default function TransferDetails() {
     <main className="flex-grow">
       <section className="flex flex-wrap justify-between items-center">
         <div className="flex items-center space-x-2.5">
-          <h1 className="text-xl sm:text-2xl font-semibold">Transfer</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold">{t('transferDetailsPage.text')}</h1>
           <h1 className="text-xl sm:text-2xl font-semibold">#{transferData.transfer_id}</h1>
         </div>
         <div className="flex items-center space-x-2 max-[545px]:mt-4">
@@ -61,7 +63,7 @@ export default function TransferDetails() {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
-              <span className="min-[320px]:whitespace-nowrap">Download PDF</span>
+              <span className="min-[320px]:whitespace-nowrap">{t('download.pdf')}</span>
             </div>
           </Button>
           <Button
@@ -71,7 +73,7 @@ export default function TransferDetails() {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
-              <span className="min-[320px]:whitespace-nowrap">Repeat Transfer</span>
+              <span className="min-[320px]:whitespace-nowrap">{t('button.repeatTransfer')}</span>
             </div>
           </Button>
         </div>
@@ -81,22 +83,22 @@ export default function TransferDetails() {
         ref={componentRef}
         className="bg-white md:flex-1 rounded px-6 xl:px-24 py-11 w-full">
           <div>
-            <h3 className="text-base">Payment Details</h3>
+            <h3 className="text-base">{t('transferDetailsPage.title')}</h3>
             <div className="mt-3 whitespace-break-spaces">
               <div className="flex justify-between items-center space-x-3 py-3 sm:px-4 border-t border-[#E0E0E0]">
-                <span className="text-xs font-light">Transfer ID</span>
+                <span className="text-xs font-light">{t('transferPage.table.head.transferId')}</span>
                 <span className="text-xs font-semibold">#{transferData.transfer_id}</span>
               </div>
               <div className="flex justify-between items-center space-x-3 py-3 sm:px-4 border-t border-[#E0E0E0]">
-                <span className="text-xs font-light">Send Amount</span>
+                <span className="text-xs font-light">{t('transferPage.table.head.sentAmount')}</span>
                 <span className="text-xs font-semibold">{transferData.sent_currency} {numberFormat(transferData.sent_amount)}</span>
               </div>
               <div className="flex justify-between items-center space-x-3 py-3 sm:px-4 border-t border-[#E0E0E0]">
-                <span className="text-xs font-light">Fee</span>
+                <span className="text-xs font-light">{t('transferDetailsPage.fees')}</span>
                 <span className="text-xs font-semibold">{transferData.sent_currency} {numberFormat(transferData.fees)}</span>
               </div>
               <div className="flex justify-between items-center space-x-3 py-3 sm:px-4 border-t border-[#E0E0E0]">
-                <span className="text-xs font-light">Total</span>
+                <span className="text-xs font-light">{t('transferDetailsPage.totalPay')}</span>
                 <span className="text-xs font-semibold">{transferData.sent_currency} {numberFormat(transferData.total_payment)}</span>
               </div>
               <div className="flex justify-between items-center space-x-3 py-3 sm:px-4 border-t border-[#E0E0E0]">

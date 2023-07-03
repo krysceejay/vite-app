@@ -17,6 +17,8 @@ interface FormSelectProps<T> {
   label: string
   value: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  onInvalid?: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  onInput?: (e: React.ChangeEvent<HTMLSelectElement>) => void
   required?: boolean
   errorMessage: string
   emptyOption?: string

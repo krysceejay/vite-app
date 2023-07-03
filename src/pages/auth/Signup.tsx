@@ -7,6 +7,7 @@ import { FormDoubleInput, FormInput, FormSelect } from '../../components/shared/
 import { createUser } from '../../api/users'
 import {useCountryData} from '../../hooks/useCountryData'
 import { transformData } from '../../utils/helper'
+import useTranslate from '../../hooks/useTranslate'
 
 interface IUserFormInput {
   ufirstName: string
@@ -38,6 +39,7 @@ interface Location {
 }
 
 export default function Signup() {
+  const {t} = useTranslate()
   const navigate = useNavigate()
   let countryOptions: Location[] = []
 
@@ -152,37 +154,41 @@ export default function Signup() {
       <div className="container h-full flex justify-center items-center">
         <div className="w-full max-w-md bg-white py-11 px-6 sm:p-11 shadow-md rounded-md">
           <form className="w-full" onSubmit={handleSubmit}>
-            <h3 className="text-xl font-medium">Glad to have you...</h3>
-            <p className="text-xs mt-6">Register now to start sending money</p>
-            <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
+            <h3 className="text-xl font-medium">{t('signUpPage.welcome')}...</h3>
+            <p className="text-xs mt-6">{t('signUpPage.instruction')}</p>
+            <div className="mt-5 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
               <FormInput
-                label="First Name"
+                label={t('firstName.text')}
                 type="text"
                 name="ufirstName"
                 value={ufirstName}
                 onChange={handleOnchange}
-                placeholder="First Name"
+                placeholder={t('firstName.text')}
                 required
                 hasError={first_name == '' ? false : true}
-                errorMessage={first_name !== '' ? first_name : "First name is required"}
+                errorMessage={first_name !== '' ? t('firstName.apiError') : t('firstName.error')}
+                onInvalid={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity(t('firstName.error'))}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity('')}
               />
             </div>
             <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
               <FormInput
-                label="Last Name"
+                label={t('lastName.text')}
                 type="text"
                 name="ulastName"
                 value={ulastName}
                 onChange={handleOnchange}
-                placeholder="Last Name"
+                placeholder={t('lastName.text')}
                 required
                 hasError={last_name == '' ? false : true}
-                errorMessage={last_name !== '' ? first_name : "Last name is required"}
+                errorMessage={last_name !== '' ? t('lastName.apiError') : t('lastName.error')}
+                onInvalid={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity(t('lastName.error'))}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity('')}
               />
             </div>
             <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
               <FormInput
-                label="Email"
+                label={t('email.text')}
                 type="email"
                 name="uemail"
                 value={uemail}
@@ -190,12 +196,14 @@ export default function Signup() {
                 placeholder="xyz@gmail.com"
                 required
                 hasError={email == '' ? false : true}
-                errorMessage={email !== '' ? email : "Must be a valid email"}
+                errorMessage={email !== '' ? t('email.apiError') : t('email.error')}
+                onInvalid={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity(t('email.error'))}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity('')}
               />
             </div>
             <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
               <FormInput
-                label="Password"
+                label={t('password.text')}
                 type="password"
                 name="upassword"
                 value={upassword}
@@ -204,24 +212,28 @@ export default function Signup() {
                 required
                 pattern="^.{8,20}$"
                 hasError={password == '' ? false : true}
-                errorMessage={password !== '' ? password : "Password is required and should be 8 to 20 characters"}
+                errorMessage={password !== '' ? t('password.apiError') : t('password.errorTwo')}
+                onInvalid={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity(t('password.error'))}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity('')}
               />
             </div>
             <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
               <FormSelect
-                label="Country"
+                label={t('country.text')}
                 value={ucountry}
                 onChange={handleSelectChange}
                 required
                 options={countryOptions}
-                emptyOption="Select your country"
+                emptyOption={t('country.empty')}
                 hasError={country_guid == '' ? false : true}
-                errorMessage={country_guid !== '' ? country_guid : "Country is required"}
+                errorMessage={country_guid !== '' ? t('country.apiError') : t('country.error')}
+                onInvalid={(e: React.ChangeEvent<HTMLSelectElement>) => e.target.setCustomValidity(t('country.error'))}
+                onInput={(e: React.ChangeEvent<HTMLSelectElement>) => e.target.setCustomValidity('')}
               />
             </div>
             <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
               <FormDoubleInput
-                label="Phone"
+                label={t('phone.text')}
                 type="tel"
                 value={mobile}
                 placeholder="77223344"
@@ -232,19 +244,23 @@ export default function Signup() {
                 placeholder2="+233"
                 required
                 hasError={phone_number == '' ? false : true}
-                errorMessage={phone_number !== '' ? phone_number : "Please enter a valid mobile number"}
+                errorMessage={phone_number !== '' ? t('phone.apiError') : t('phone.error')}
+                onInvalid={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity(t('phone.error'))}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity('')}
               />
             </div>
             <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
               <FormInput
-                label="Location"
+                label={t('location.text')}
                 type="text"
                 name="ulocation"
                 value={ulocation}
                 onChange={handleOnchange}
-                placeholder="Enter State/Province/Region"
+                placeholder={t('location.placeholder')}
                 hasError={location == '' ? false : true}
-                errorMessage={location !== '' ? location : ""}
+                errorMessage={location !== '' ? t('location.apiError') : ""}
+                onInvalid={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity(t('location.error'))}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) => e.target.setCustomValidity('')}
               />
             </div>
             <div className="mt-3">
@@ -256,15 +272,15 @@ export default function Signup() {
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                   }
-                  <span className="font-medium"> Create an acocunt</span>
+                  <span className="font-medium"> {t('button.createAccount')}</span>
                 </div>
               </Button>
             </div>
             <p className="text-xs mt-5">
-              By continuing, you agree to our <Link to="/" className="text-green-color">terms and conditions</Link>.
+              {t('signUpPage.byContinue')} <Link to="/" className="text-green-color">{t('term.condition')}</Link>.
             </p>
             <p className="text-xs mt-2">
-              Already have a Vargent account? <Link to="/" className="text-green-color">Log in here</Link>
+              {t('signUpPage.haveAccount')}? <Link to="/" className="text-green-color">{t('signUpPage.loginHere')}</Link>
             </p>
           </form>
         </div>

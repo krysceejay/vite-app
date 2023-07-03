@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import moment from 'moment'
 import { getUserTransfersSumSent } from '../../api/transfers'
 import DetailsLink from '../../components/shared/DetailsLink'
-import AuthContext, { IAuthContext } from '../../context/AuthContext'
 import { useTransferData } from '../../hooks/useTransfer'
 import { numberFormat, stringToHslColor } from '../../utils/helper'
 import renderFlag from '../../utils/flags'
@@ -15,6 +14,7 @@ import Skeleton from '../../components/shared/Skeleton'
 import { useCountryData } from '../../hooks/useCountryData'
 import { useCheckKycData } from '../../hooks/useKycData'
 import useAuth from '../../hooks/useAuth'
+import useTranslate from '../../hooks/useTranslate'
 
 type TNewTransfer = {
   sentAmount: string
@@ -24,6 +24,7 @@ type TNewTransfer = {
 }
 
 export default function Dashboard() {
+  const {t} = useTranslate()
   const navigate = useNavigate()
   const { authUser } = useAuth()
 
@@ -79,11 +80,11 @@ export default function Dashboard() {
   // if (getTransfers.isError) return <p>Error occurred</p>
   return (
     <section className="flex-grow overflow-hidden">
-      <h1 className="text-xl sm:text-2xl font-semibold">Dashboard</h1>
+      <h1 className="text-xl sm:text-2xl font-semibold">{t('dashboardPage.title')}</h1>
       <section className="overflow-hidden">
         <div className="flex flex-col md:flex-row mt-9 space-y-4 md:space-x-4 md:space-y-0 lg:space-x-5">
           <div className="bg-white rounded-md p-5 lg:p-6 shadow-lg w-full md:w-1/3">
-            <h3 className="text-xs font-semibold">New Transfer</h3>
+            <h3 className="text-xs font-semibold">{t('transferPage.newTransfer.title')}</h3>
             <NewTransferSend
               sentAmount={sentAmount}
               currency={currency}
@@ -129,7 +130,7 @@ export default function Dashboard() {
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                   </svg>
-                  <h3 className="text-sm">Total Sent</h3>
+                  <h3 className="text-sm">{t('dashboardPage.sentTotal')}</h3>
                 </div>
                 {sumSentIsLoading ? <div className="h-6 w-3/5 mt-2">
                   <Skeleton />
@@ -141,7 +142,7 @@ export default function Dashboard() {
                   </p>
                 }
                 <div className="mt-3">
-                  <DetailsLink link="/transfer" text="See Details" isTable={false} />
+                  <DetailsLink link="/transfer" text={t('link.seeDetails')} isTable={false} />
                 </div>
               </div>
               <div className="h-1/2 border-l border-[#F5F6FA] px-7 py-6">
@@ -149,7 +150,7 @@ export default function Dashboard() {
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                   </svg>
-                  <h3 className="text-sm">Beneficiaries</h3>
+                  <h3 className="text-sm">{t('beneficiariesPage.title')}</h3>
                 </div>
                 {beneficiaryIsLoading ? <div className="h-6 w-3/5 mt-2">
                   <Skeleton />
@@ -159,7 +160,7 @@ export default function Dashboard() {
                 </p>
                 }
                 <div className="mt-3">
-                  <DetailsLink link="/beneficiaries" text="See Details" isTable={false} />
+                  <DetailsLink link="/beneficiaries" text={t('link.seeDetails')} isTable={false} />
                 </div>
               </div>
             </div>
@@ -168,12 +169,12 @@ export default function Dashboard() {
       </section>
       <section className="mt-11">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl sm:text-2xl font-semibold">Recent Transfers</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold">{t('dashboardPage.recentTransfer')}</h1>
           {transferData?.total !== 0 &&
-            <Link to="/transfers" className="text-sm font-semibold text-green-color">See all</Link>
+            <Link to="/transfers" className="text-sm font-semibold text-green-color">{t('link.seeAll')}</Link>
           }
         </div>
-        {transferData?.total === 0 ? <div className="h-40 flex justify-center items-center">No transfer</div> :
+        {transferData?.total === 0 ? <div className="h-40 flex justify-center items-center">{t('transferPage.noTransfer')}</div> :
           <div className="mt-5 bg-white rounded-md overflow-hidden">
             <div className="px-6 md:px-10">
               <TransferTable data={transferData?.data} />

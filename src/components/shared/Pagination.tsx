@@ -1,3 +1,5 @@
+import useTranslate from "../../hooks/useTranslate"
+
 interface IPaginationProps {
     page: number
     pages: number
@@ -8,6 +10,7 @@ interface IPaginationProps {
 }
 
 const Pagination = ({ page, pages, changePage, totalRecords, limit, showDetails = true }: IPaginationProps) => {
+	const {t} = useTranslate()
 
     let middleNumbers
 
@@ -95,7 +98,7 @@ const Pagination = ({ page, pages, changePage, totalRecords, limit, showDetails 
     return (
         <div className="text-sm block md:flex items-center justify-between space-x-3">
             {showDetails &&
-            <h5 className="mb-2 md:mb-0">Showing {1 + (page - 1) * limit} to {page === pages ? totalRecords : (page * limit)} of {totalRecords} entries</h5>
+            <h5 className="mb-2 md:mb-0">{t('paginate.text', { page: 1 + (page - 1) * limit, limit: page === pages ? totalRecords : (page * limit), total: totalRecords })}</h5>
             }
             <ul className="flex flex-wrap items-center space-x-1 font-normal">
                 <li>

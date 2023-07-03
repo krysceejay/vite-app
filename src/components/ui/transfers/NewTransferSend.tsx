@@ -6,6 +6,7 @@ import Button from '../../shared/Button'
 import { FormInput } from '../../shared/Form'
 import { ICountry } from '../../../api/types/country-types'
 import CountryCurrencyListOptions from '../../shared/CountryCurrencyListOptions'
+import useTranslate from '../../../hooks/useTranslate'
 
 type TNewTransfer = {
   sentAmount: string
@@ -24,6 +25,7 @@ const NewTransferSend = ({
   sentAmount, currency, country, countries, rate, authUser, hasBtnSend = false,
   handleOnchange, handleSelectChange, handleOnclick
 }: TNewTransfer) => {
+  const {t} = useTranslate()
   return (
     <Fragment>
       <div className="mt-3">
@@ -40,7 +42,7 @@ const NewTransferSend = ({
                     required
                   /> */}
             <FormInput
-              label="You send"
+              label={t('transferPage.newTransfer.youSend')}
               type="text"
               name="sentAmount"
               value={sentAmount}
@@ -56,7 +58,7 @@ const NewTransferSend = ({
         </div>
         <div className="bg-[#F5F6FA] py-4 pl-3 pr-4 rounded-md flex justify-between items-center mt-[2px]">
           <div>
-            <p className="text-[#888888] text-[10px]">Recipient gets</p>
+            <p className="text-[#888888] text-[10px]">{t('transferPage.newTransfer.recipient')}</p>
             <p className="text-base font-medium mt-1">
               {numberFormat(roundToTwoDP(+removeCommaFromNumber(sentAmount) * +rate))}
             </p>
@@ -81,13 +83,13 @@ const NewTransferSend = ({
       </div>
       {hasBtnSend &&
         <>
-          <div className="text-[10px] mt-3">You send {authUser?.country.currency.currency_code} 1.00 = {`${rate} ${currency}`}</div>
+          <div className="text-[10px] mt-3">{t('transferPage.newTransfer.youSend')} {authUser?.country.currency.currency_code} 1.00 = {`${rate} ${currency}`}</div>
           <div className="mt-3">
             <Button
               type="button"
               onClick={handleOnclick}
             >
-              <div className="bg-green-color py-3 px-4 rounded-md w-full">Send Money</div>
+              <div className="bg-green-color py-3 px-4 rounded-md w-full">{t('button.sendMoney')}</div>
             </Button>
           </div>
         </>

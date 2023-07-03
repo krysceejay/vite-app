@@ -4,12 +4,13 @@ import { isAxiosError } from 'axios'
 import { toast } from 'react-toastify'
 import Pagination from "../../shared/Pagination"
 import { useState } from "react"
-import { stringToHslColor } from "../../../utils/helper"
+import { stringToHslColor, truncate } from "../../../utils/helper"
 import Modal from "../../shared/Modal"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { addBeneficiary } from "../../../api/beneficiaries"
 import AddBeneficiary from "../beneficiaries/AddBeneficiary"
 import { usePayoutCountryData } from "../../../hooks/useCountryData"
+import useTranslate from "../../../hooks/useTranslate"
 
 interface BeneficiaryProps {
   goTo: (int: number) => void
@@ -19,6 +20,7 @@ interface BeneficiaryProps {
 }
 
 export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary, handleOnclick }: BeneficiaryProps) {
+  const {t} = useTranslate()
   let paymentMethodOptions: TPaymentMethod[] = []
   const queryClient = useQueryClient()
   const { payoutCurrency, beneficiaryName, beneficiarySendNumber, deliveryMethod, beneficiaryCountry, country } = newTransfer
@@ -172,23 +174,23 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
       {modal.confirmOpen && 
         <Modal hide={() => toggleConfirmModal()}>
           <section>
-            <h3 className="text-xl font-medium">Confirm Beneficiary</h3>
+            <h3 className="text-xl font-medium">{t('transferPage.beneficiary.confirm')}</h3>
             <aside className="text-xs my-2 py-2 space-y-2 border-y border-y-slate-200">
-              <h3><b>Name:</b> {beneficiaryName}</h3>
-              <p><b>Delivery method:</b> {deliveryMethod}</p>
-              <p><b>Mobile:</b> {beneficiarySendNumber}</p>
-              <p><b>Country:</b> {beneficiaryCountry}</p>
+              <h3><b>{t('transferPage.beneficiary.name')}:</b> {beneficiaryName}</h3>
+              <p><b>{t('transferPage.beneficiary.deliveryMethod')}:</b> {deliveryMethod}</p>
+              <p><b>{t('transferPage.beneficiary.phone')}:</b> {beneficiarySendNumber}</p>
+              <p><b>{t('transferPage.beneficiary.country')}:</b> {beneficiaryCountry}</p>
             </aside>
             <aside className="flex justify-end items-center space-x-2 mt-3">
               <button 
               onClick={() => toggleConfirmModal()}
               className="block text-xs font-medium focus:outline-none focus:shadow-outline">
-                <div className="bg-transparent py-2 px-4 rounded-md">Cancel</div>
+                <div className="bg-transparent py-2 px-4 rounded-md">{t('button.cancel')}</div>
               </button>
               <button 
               onClick={(e) => confirmBeneficiary(e)}
               className="block text-white text-xs font-medium focus:outline-none focus:shadow-outline">
-                <div className="bg-green-color py-2 px-4 rounded-md">Ok</div>
+                <div className="bg-green-color py-2 px-4 rounded-md">{t('button.ok')}</div>
               </button>
             </aside>
           </section>
@@ -199,7 +201,7 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
           className="
                 relative flex flex-col justify-center items-center w-full">
           <div className="w-4 h-4 bg-green-color rounded-full z-10 cursor-pointer" onClick={() => goTo(0)} />
-          <p className="text-green-color text-[10px] min-[420px]:text-xs font-semibold mt-2.5">Transfer Details</p>
+          <p className="text-green-color text-[10px] min-[420px]:text-xs font-semibold mt-2.5">{truncate(t('transferPage.newTransfer.transferDetails'), 20)}</p>
         </div>
         <div
           className="
@@ -207,7 +209,7 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
                 before:content-[''] before:bg-green-color before:absolute before:w-full before:h-[2px] 
                 before:right-1/2 before:top-[36%] before:-translate-y-2">
           <div className="w-4 h-4 bg-green-color rounded-full z-10 cursor-pointer" onClick={() => goTo(1)} />
-          <p className="text-green-color text-[10px] min-[420px]:text-xs font-semibold mt-2.5">Select Beneficiary</p>
+          <p className="text-green-color text-[10px] min-[420px]:text-xs font-semibold mt-2.5">{truncate(t('transferPage.newTransfer.selectBeneficiary'), 20)}</p>
         </div>
         <div
           className="
@@ -215,7 +217,7 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
                 before:content-[''] before:bg-[#D9D9D9] before:absolute before:w-full before:h-[2px] 
                 before:right-1/2 before:top-[36%] before:-translate-y-2">
           <div className="w-4 h-4 bg-[#D9D9D9] rounded-full z-10" />
-          <p className="text-[10px] min-[420px]:text-xs font-semibold mt-2.5">Confirm & Pay</p>
+          <p className="text-[10px] min-[420px]:text-xs font-semibold mt-2.5">{truncate(t('transferPage.newTransfer.confirmPay'), 20)}</p>
         </div>
       </div>
       <div className="mt-8 px-2">
@@ -228,7 +230,7 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
             name="query"
             onChange={handleOnchangeQuery}
             value={query}
-            placeholder="Search Beneficiaries"
+            placeholder={t('transferPage.beneficiary.searchPlaceholder')}
           />
           {/* <div className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">Search</div> */}
         </div>
@@ -242,8 +244,8 @@ export default function Beneficiary({ goTo, newTransfer, handleSelectBeneficiary
               </svg>
             </div>
             <div className="mt-1.5 text-center">
-              <p className="text-[10px]">New Recipient</p>
-              <p className="text-[8px] mt-1">Create New Recipient</p>
+              <p className="text-[10px]">{t('transferPage.beneficiary.newRecipient')}</p>
+              <p className="text-[8px] mt-1">{t('transferPage.beneficiary.creatNew')}</p>
             </div>
           </div>
           {data.map(beneficiary =>

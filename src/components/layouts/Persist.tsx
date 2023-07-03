@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 import { useEffect, useState } from 'react'
-import { getData } from '../../utils/api'
 import { currentUser } from '../../api/users'
 
 const Persist = () => {
