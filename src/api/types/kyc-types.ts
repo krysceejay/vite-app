@@ -1,14 +1,17 @@
 import { IUser } from "./user-types"
 
+export enum DocName {
+  Identity = "Proof of Identity",
+  Address = "Proof of Address",
+}
 export interface IAddKyc {
   document_name: string
   title: string
   file: File | null
 }
-
 export interface IKyc {
   guid: string
-  document_name: string
+  document_name: DocName
   title: string
   file: string
   status: string

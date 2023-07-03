@@ -9,6 +9,8 @@ import Modal from '../../../components/shared/Modal'
 import PageTopOne from '../../../components/shared/PageTopOne'
 import {useKycData} from '../../../hooks/useKycData'
 import VerifyDoc from '../../../components/ui/kyc/VerifyDoc'
+import SmileService from '../../../components/ui/kyc/SmileService'
+import { DocName } from '../../../api/types/kyc-types'
 
 type TKycState = {
   upload: File | null
@@ -27,7 +29,7 @@ export default function KYCDocuments() {
     title: '',
     country: '',
     isModalOpen: false,
-    showSmileId: false
+    showSmileId: false,
   })
 
   const { title, document_name, upload, isModalOpen, country, showSmileId } = formData
@@ -57,6 +59,14 @@ export default function KYCDocuments() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>, name: string) => {
+    const { value } = e.target
+    setFormData(prev => ({
+      ...prev, 
+      [name]: value 
+    }))
+  }
+
   const handleUploadInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let fileList: FileList | null = e.target.files
     if (!fileList) {
@@ -84,11 +94,12 @@ export default function KYCDocuments() {
   }
 
   const { isLoading: kycIsLoading, isError: kycIsError, data: kycData } = useKycData()
-
+  
   const { isLoading: addKycIsLoading, mutate: addNewKyc } = useMutation({
     mutationFn: addKycFile,
     onSuccess: () => {
       closeModal()
+      toast.success('File uploaded successfully.')
       queryClient.invalidateQueries(['kyc'])
     },
     onError: (err) => {
@@ -131,8 +142,16 @@ export default function KYCDocuments() {
     }))
   }
 
+  const handleGoBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      showSmileId: false
+    }))
+  }
+
   if (kycIsLoading) return <p>Loading...</p>
   if (kycIsError) return <p>Error occurred</p>
+  
 
   const poi = kycData?.find(k => k.document_name === 'Proof of Identity')
   const poa = kycData?.find(k => k.document_name === 'Proof of Address')
@@ -183,41 +202,19 @@ export default function KYCDocuments() {
           <div className="w-full my-8">
             <h3 className="text-xl font-medium capitalize">{document_name}</h3>
             {showSmileId ? <div className="pt-4 pb-10">
-              <VerifyDoc country={country} title={title} />
+              <VerifyDoc country={country} title={title} closeModal={closeModal} />
+              <button 
+              onClick={handleGoBack}
+              className="block text-white text-xs font-medium focus:outline-none focus:shadow-outline mt-8">
+              <div className="bg-green-color py-2 px-4 rounded-md">Go Back</div>
+              </button>
             </div> :
-            <div>
-              <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
-                <FormInput
-                  label="Document title"
-                  type="text"
-                  name="title"
-                  value={title}
-                  onChange={handleOnchange}
-                  required
-                  placeholder="Add ID title e.g International Passport"
-                />
-              </div>
-              <div className="mt-2 pb-3 w-full rounded-md overflow-hidden bg-[#F5F6FA]">
-                <FormInput
-                  label="Country"
-                  type="text"
-                  name="country"
-                  value={country}
-                  onChange={handleOnchange}
-                  required
-                  placeholder="Add country where ID was issued"
-                />
-              </div>
-              <div className="mt-3">
-                <Button
-                onClick={handleContinue}
-                >
-                  <div className="bg-green-color py-3 px-4 rounded-md flex items-center justify-center">
-                    <span className="font-medium">Next</span>
-                  </div>
-                </Button>
-              </div>
-            </div>
+            <SmileService
+              title={title}
+              country={country}
+              handleContinue={handleContinue}
+              handleSelectChange={handleSelectChange}
+            />
             }
           </div>
           }

@@ -27,7 +27,7 @@ export default function Transfers() {
 
   const query = searchParams.get('query') || ''
   const page = searchParams.get('page') || '1'
-  const limit = searchParams.get('limit') || '1'
+  const limit = searchParams.get('limit') || '10'
   
   const ref = useRef<HTMLInputElement>(null)
 
