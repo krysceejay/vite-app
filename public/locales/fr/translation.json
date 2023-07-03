@@ -1,0 +1,191 @@
+{
+	"companyName": "Vargent",
+	"logout": "Se déconnecter",
+	"and": "et",
+	"privacy": "Notre politique de confidentialité",
+	"copyright": "Droits d'auteur",
+	"loginPage": {
+		"welcome": "Vous êtes Bienvenue",
+		"instruction": "Entrez votre adresse e-mail et votre mot de passe enregistrés pour continuer",
+		"trustDevice": "Faire confiance à cet appareil",
+		"forgotPassword": "Mot de passe oublié",
+		"byLoggingIn": "En vous connectant, vous acceptez nos",
+		"haveAccount": "Vous n'avez pas encore de compte $t(companyName)",
+		"loginSuccess": "Connexion réussie"
+	},
+	"signUpPage": {
+		"welcome": "Content de t'avoir",
+		"instruction": "Inscrivez-vous maintenant pour commencer à envoyer de l'argent",
+		"byContinue": "En continuant, vous acceptez nos",
+		"haveAccount": "Vous avez déjà un compte $t(companyName)",
+		"loginHere": "Connectez-vous ici"
+	},
+	"dashboardPage": {
+		"title": "Tableau de bord",
+		"sentTotal": "Total envoyé",
+		"recentTransfer": "Transferts récents"
+	},
+	"transferPage": {
+		"title": "Transferts",
+		"noTransfer": "Pas de transfert",
+		"searchPlaceholder": "Rechercher des transferts",
+		"rate": "Taux",
+		"fee": "Frais de transfert",
+		"newTransfer": {
+			"title": "Nouveau Transfert",
+			"youSend": "Vous envoyez",
+			"recipient": "Le destinataire obtient",
+			"transferDetails": "Détails du transfert",
+			"selectBeneficiary": "Sélectionnez le bénéficiaire",
+			"confirmPay": "Confirmer et payer",
+			"payInstruction": "Payez le montant dû au compte avec les détails ci-dessous",
+			"payRef": "Référence de paiement / transaction",
+			"amountDue": "Montant dû",
+			"accountName": "Nom du compte",
+			"accountNum": "Numéro de compte",
+			"bankName": "Nom de banque",
+			"serviceName": "Nom du service",
+			"phoneNum": "Numéro de téléphone"
+		},
+		"beneficiary": {
+			"newRecipient": "Nouveau destinataire",
+			"creatNew": "Créer un nouveau destinataire",
+			"searchPlaceholder": "Rechercher des bénéficiaires",
+			"confirm": "Confirmer le bénéficiaire",
+			"name": "Nom",
+			"deliveryMethod": "Méthode de livraison",
+			"phone": "Téléphone",
+			"country": "Pays"
+		},
+		"table": {
+			"head": {
+				"transferId": "ID de transfert",
+				"beneficiary": "Bénéficiaire",
+				"payoutMethod": "Méthode de paiement",
+				"sentAmount": "Montant envoyé",
+				"payoutAmount": "Payer Montant",
+				"date": "Date",
+				"status": "Situation",
+				"view": "Voir"
+			},
+			"details": "Détails"
+		},
+		"status": {
+			"payment pending": "paiement en attente",
+			"payment received": "paiement reçu",
+			"payout in progress": "à payer en cours",
+			"paid out": "acquittées"
+		}
+	},
+	"transferDetailsPage": {
+		"text": "Transfert",
+		"title": "Détails de paiement",
+		"beneficiaryGet": "Le bénéficiaire obtient",
+		"beneficiary": "Bénéficiaire",
+		"network": "Réseau",
+		"mobile": "Numéro de téléphone",
+		"fees": "Frais",
+		"total": "Paiement total dû"
+	},
+	"beneficiariesPage": {
+		"title": "Les bénéficiaires",
+		"newBeneficiary": "Ajouter un nouveau bénéficiaire"
+	},
+	"kycPage": {
+		"title": "KYC"
+	},
+	"download": {
+		"csv": "Télécharger au format CSV",
+		"pdf": "Télécharger le PDF"
+	},
+	"paginate": {
+		"text": "Affichage de {{page}} à {{limit}} sur {{total}} entrées"
+	},
+	"button": {
+		"createAccount": "Créer un compte",
+		"loginText": "Connectez-vous à $t(companyName)",
+		"sendMoney": "Envoyer de l'argent",
+		"search": "Recherche",
+		"ok": "D'accord",
+		"cancel": "Annuler",
+		"addBeneficiary": "Ajouter un bénéficiaire",
+		"confirmTransfer": "Confirmer le transfert",
+		"repeatTransfer": "Répéter le transfert"
+	},
+	"link": {
+		"seeDetails": "Voir les détails",
+		"seeAll": "Voir tout"
+	},
+	"toast": {
+		"requiredFields": "Veuillez fournir tous les champs obligatoires avant de continuer"
+	},
+	"term": {
+		"warn": "En utilisant ce site Web, vous acceptez nos",
+		"use": "Conditions d'utilisation",
+		"condition": "termes et conditions"
+	},
+	"email": {
+		"text": "E-mail",
+		"error": "Doit être un email valide",
+		"apiError": "L'e-mail doit être un e-mail"
+	},
+	"password": {
+		"text": "Mot de passe",
+		"error": "Mot de passe requis",
+		"errorTwo": "Le mot de passe est obligatoire et doit comporter entre 8 et 20 caractères",
+		"apiError": "le mot de passe doit être supérieur ou égal à 8 caractères"
+	},
+	"firstName": {
+		"text": "Prénom",
+		"error": "Le prénom est requis",
+		"apiError": "Le premier nom doit être un texte"
+	},
+	"lastName": {
+		"text": "Nom de famille",
+		"error": "Le nom de famille est requis",
+		"apiError": "Le nom de famille doit être un texte"
+	},
+	"country": {
+		"text": "Pays",
+		"error": "Le pays est requis",
+		"apiError": "Veuillez sélectionner un pays",
+		"empty": "Sélectionnez le pays"
+	},
+	"phone": {
+		"text": "Téléphone",
+		"error": "Veuillez saisir un numéro de téléphone valide",
+		"apiError": "Doit être un numéro de téléphone valide"
+	},
+	"location": {
+		"text": "Emplacement",
+		"error": "L'emplacement doit être un texte",
+		"apiError": "L'emplacement doit être un texte",
+		"placeholder": "Entrez l'état/la province/la région"
+	},
+	"payMethod": {
+		"text": "Mode de paiement",
+		"error": "Le mode de paiement est requis",
+		"empty": "Sélectionnez le mode de paiement"
+	},
+	"fullName": {
+		"text": "Nom et prénom",
+		"error": "Le nom complet du bénéficiaire est requis"
+	},
+	"sendNumber": {
+		"text": "Envoyer le numéro",
+		"error": "Le numéro de compte du bénéficiaire est requis"
+	},
+	"service": {
+		"text": "Service",
+		"error": "Le service est requis"
+	},
+	"deliveryMethod": {
+		"text": "Méthode de livraison",
+		"error": "Le mode de livraison est requis",
+		"empty": "Sélectionnez le mode de livraison"
+	},
+	"transferPurpose": {
+		"text": "Objectif du transfert",
+		"placeholder": "Entrez l'objet du transfert"
+	}
+}

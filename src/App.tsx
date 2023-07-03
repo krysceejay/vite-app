@@ -12,8 +12,8 @@ const Signup = lazy(() => import('./pages/auth/Signup'))
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'))
 
 //Dashboard
-import Dashboard from './pages/dashboard'
-import Transfers from './pages/dashboard/transfers'
+const Dashboard = lazy(() => import('./pages/dashboard'))
+const Transfers = lazy(() => import('./pages/dashboard/transfers'))
 import TransferDetails from './pages/dashboard/transfers/TransferDetails'
 import NewTransfer from './pages/dashboard/transfers/New'
 import Beneficiaries from './pages/dashboard/beneficiaries'
@@ -33,8 +33,16 @@ function App() {
       <Route path="/" element={<AppLayout />}>
         <Route element={<Persist />}>
           <Route element={<DashboardLayout />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="transfers" element={<Transfers />} />
+            <Route path="dashboard" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <Dashboard />
+              </Suspense>
+            } />
+            <Route path="transfers" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <Transfers />
+              </Suspense>
+            } />
             <Route path="transfers/:id" element={<TransferDetails />} />
             <Route path="transfers/new" element={<NewTransfer />} />
             <Route path="beneficiaries" element={<Beneficiaries />} />

@@ -5,15 +5,17 @@ import Beneficiary from '../../../components/ui/transfers/Beneficiary'
 import ConfirmPay from '../../../components/ui/transfers/ConfirmPay'
 import PageTopOne from "../../../components/shared/PageTopOne"
 import { useLocation } from "react-router-dom"
-import AuthContext, { IAuthContext } from "../../../context/AuthContext"
 import { TNewTransfer, TPaymentMethod, TSelectBeneficiary } from "../../../common-types"
 import { numberFormat, removeCommaFromNumber, roundToTwoDP } from "../../../utils/helper"
 import { useConfirmTransfer, useNewTransfer } from "../../../hooks/useTransfer"
 import { usePaymentByTransfer } from "../../../hooks/usePayment"
 import { useCountryData } from "../../../hooks/useCountryData"
+import useAuth from "../../../hooks/useAuth"
+import useTranslate from "../../../hooks/useTranslate"
 
 export default function NewTransfer() {
-  const { authUser } = useContext(AuthContext) as IAuthContext
+  const {t} = useTranslate()
+  const { authUser } = useAuth()
   const { state } = useLocation()
   let paymentMethodOptions: TPaymentMethod[] = []
 
@@ -174,58 +176,58 @@ export default function NewTransfer() {
 
   return (
     <main className="flex-grow">
-      <PageTopOne title="New Transfer" hasBtn={false} link="/" />
+      <PageTopOne title={t('transferPage.newTransfer.title')} hasBtn={false} link="/" />
       <section className="flex space-y-3.5 mt-9 items-start flex-col min-[835px]:flex-row min-[835px]:space-x-3.5 min-[835px]:space-y-0">
         <div className="bg-white md:flex-1 rounded px-0 min-[420px]:px-6 py-11 w-full">
           {steps[currentStepIndex]}
         </div>
         <div className="w-full xl:w-[390px] bg-white rounded mt-4 md:mt-0 px-6 py-11 whitespace-break-spaces">
-          <h3 className="text-base">Payment Details</h3>
+          <h3 className="text-base">{t('transferDetailsPage.title')}</h3>
           <div className="mt-3">
             <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-              <span className="text-xs font-light">You send</span>
+              <span className="text-xs font-light">{t('transferPage.newTransfer.youSend')}</span>
               <span className="text-xs font-semibold">{sentCurrency} {sentAmount ? sentAmount : 0}</span>
             </div>
             <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-              <span className="text-xs font-light">Payment method</span>
+              <span className="text-xs font-light">{t('payMethod.text')}</span>
               <span className="text-xs font-semibold">{paymentMethod}</span>
             </div>
             <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-              <span className="text-xs font-light">Rate</span>
+              <span className="text-xs font-light">{t('transferPage.rate')}</span>
               <span className="text-xs font-semibold">{sentCurrency} = {rate} {payoutCurrency}</span>
             </div>
             <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-              <span className="text-xs font-light">Beneficiary gets</span>
+              <span className="text-xs font-light">{t('transferDetailsPage.beneficiaryGet')}</span>
               <span className="text-xs font-semibold">{payoutCurrency} {numberFormat(roundToTwoDP(+removeCommaFromNumber(sentAmount) * +rate))}</span>
             </div>
             {currentStepIndex == 2 &&
               <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-                <span className="text-xs font-light">Beneficiary</span>
+                <span className="text-xs font-light">{t('transferDetailsPage.beneficiary')}</span>
                 <span className="text-xs font-semibold">{beneficiaryName}</span>
               </div>
             }
             <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-              <span className="text-xs font-light">Delivery method</span>
+              <span className="text-xs font-light">{t('deliveryMethod.text')}</span>
               <span className="text-xs font-semibold">{deliveryMethod}</span>
             </div>
             {currentStepIndex == 2 &&
               <>
                 <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-                  <span className="text-xs font-light">Network</span>
+                  <span className="text-xs font-light">{t('transferDetailsPage.network')}</span>
                   <span className="text-xs font-semibold">{beneficiaryService}</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-                  <span className="text-xs font-light">Mobile Number</span>
+                  <span className="text-xs font-light">{t('transferDetailsPage.mobile')}</span>
                   <span className="text-xs font-semibold">{authUser?.phone_number}</span>
                 </div>
               </>
             }
             <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-              <span className="text-xs font-light">Fees</span>
+              <span className="text-xs font-light">{t('transferDetailsPage.fees')}</span>
               <span className="text-xs font-semibold">{sentCurrency} {getFee(sentAmount).fees}</span>
             </div>
             <div className="flex justify-between items-center py-3 border-t border-[#E0E0E0]">
-              <span className="text-xs font-light">Total payment due</span>
+              <span className="text-xs font-light">{t('transferDetailsPage.total')}</span>
               <span className={`text-sm font-bold ${currentStepIndex == 2 && 'text-green-color'}`}>
                 {sentCurrency} {getFee(sentAmount).total}
               </span>

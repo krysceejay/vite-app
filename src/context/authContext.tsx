@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react'
 import { IUser } from '../api/types/user-types'
+import useLocalStorage from '../hooks/useLocalStorage'
 
 export interface IAuthContext {
   authUser: IUser | null

@@ -1,0 +1,192 @@
+{
+	"companyName": "Vargent",
+	"logout": "Logout",
+	"and": "and",
+	"privacy": "Privacy Policy",
+	"copyright": "Copyright",
+	"loginPage": {
+		"welcome": "You’re Welcome",
+		"instruction": "Enter your registered email address and password to continue",
+		"trustDevice": "Trust this device",
+		"forgotPassword": "Forgot Password",
+		"byLoggingIn": "By logging in, you agree to our",
+		"haveAccount": "Don't have a $t(companyName) account yet",
+		"loginSuccess": "Login successful"
+	},
+	"signUpPage": {
+		"welcome": "Glad to have you",
+		"instruction": "Register now to start sending money",
+		"byContinue": "By continuing, you agree to our",
+		"haveAccount": "Already have a $t(companyName) account",
+		"loginHere": "Log in here"
+	},
+	"dashboardPage": {
+		"title": "Dashboard",
+		"sentTotal": "Total Sent",
+		"recentTransfer": "Recent Transfers"
+	},
+	"transferPage": {
+		"title": "Transfers",
+		"noTransfer": "No transfer",
+		"searchPlaceholder": "Search Transfers",
+		"rate": "Rate",
+		"fee": "Transfer fee",
+		"newTransfer": {
+			"title": "New Transfer",
+			"youSend": "You send",
+			"recipient": "Recipient gets",
+			"transferDetails": "Transfer Details",
+			"selectBeneficiary": "Select Beneficiary",
+			"confirmPay": "Confirm & Pay",
+			"payInstruction": "Pay the amount due to the account with details below",
+			"payRef": "Payment / Transaction Reference",
+			"amountDue": "Amount Due",
+			"accountName": "Account Name",
+			"accountNum": "Account Number",
+			"bankName": "Bank Name",
+			"serviceName": "Service Name",
+			"phoneNum": "Phone Number"
+		},
+		"beneficiary": {
+			"newRecipient": "New Recipient",
+			"creatNew": "Create New Recipient",
+			"searchPlaceholder": "Search Beneficiaries",
+			"confirm": "Confirm Beneficiary",
+			"name": "Name",
+			"deliveryMethod": "Delivery method",
+			"phone": "Mobile",
+			"country": "Country"
+		},
+		"table": {
+			"head": {
+				"transferId": "Transfer ID",
+				"beneficiary": "Beneficiary",
+				"payoutMethod": "Payout Method",
+				"sentAmount": "Sent Amount",
+				"payoutAmount": "Payout Amount",
+				"date": "Date",
+				"status": "Status",
+				"view": "View"
+			},
+			"details": "Details"
+		},
+		"status": {
+			"payment pending": "payment pending",
+			"payment received": "payment received",
+			"payout in progress": "payout in progress",
+			"paid out": "paid out"
+		}
+	},
+	"transferDetailsPage": {
+		"text": "Transfer",
+		"title": "Payment Details",
+		"beneficiaryGet": "Beneficiary gets",
+		"beneficiary": "Beneficiary",
+		"network": "Network",
+		"mobile": "Mobile Number",
+		"fees": "Fees",
+		"total": "Total payment due",
+		"totalPay": "Total"
+	},
+	"beneficiariesPage": {
+		"title": "Beneficiaries",
+		"newBeneficiary": "Add New Beneficiary"
+	},
+	"kycPage": {
+		"title": "KYC"
+	},
+	"download": {
+		"csv": "Download as CSV",
+		"pdf": "Download PDF"
+	},
+	"paginate": {
+		"text": "Showing {{page}} to {{limit}} of {{total}} entries"
+	},
+	"button": {
+		"createAccount": "Create an account",
+		"loginText": "Log in to $t(companyName)",
+		"sendMoney": "Send Money",
+		"search": "Search",
+		"ok": "Ok",
+		"cancel": "Cancel",
+		"addBeneficiary": "Add Beneficiary",
+		"confirmTransfer": "Confirm Transfer",
+		"repeatTransfer": "Repeat Transfer"
+	},
+	"link": {
+		"seeDetails": "See Details",
+		"seeAll": "See all"
+	},
+	"toast": {
+		"requiredFields": "Kindly provide all required fields before you proceed"
+	},
+	"term": {
+		"warn": "By using this website, you accept our",
+		"use": "Terms of Use",
+		"condition": "terms and conditions"
+	},
+	"email": {
+		"text": "Email",
+		"error": "Must be a valid email",
+		"apiError": "Email must be an email"
+	},
+	"password": {
+		"text": "Password",
+		"error": "Password is required",
+		"errorTwo": "Password is required and should be 8 to 20 characters",
+		"apiError": "password must be longer than or equal to 8 characters"
+	},
+	"firstName": {
+		"text": "First Name",
+		"error": "First name is required",
+		"apiError": "First name must be a text"
+	},
+	"lastName": {
+		"text": "Last Name",
+		"error": "Last name is required",
+		"apiError": "Last name must be a text"
+	},
+	"country": {
+		"text": "Country",
+		"error": "Country is required",
+		"apiError": "Please select a country",
+		"empty": "Select country"
+	},
+	"phone": {
+		"text": "Phone",
+		"error": "Please enter a valid mobile number",
+		"apiError": "Must be a valid phone number"
+	},
+	"location": {
+		"text": "Location",
+		"error": "Location must be a text",
+		"apiError": "Location must be a text",
+		"placeholder": "Enter State/Province/Region"
+	},
+	"payMethod": {
+		"text": "Payment Method",
+		"error": "Payment Method is required",
+		"empty": "Select Payment Method"
+	},
+	"fullName": {
+		"text": "Full Name",
+		"error": "Beneficiary full name is required"
+	},
+	"sendNumber": {
+		"text": "Send Number",
+		"error": "Beneficiary account number is required"
+	},
+	"service": {
+		"text": "Service",
+		"error": "Service is required"
+	},
+	"deliveryMethod": {
+		"text": "Delivery Method",
+		"error": "Delivery Method is required",
+		"empty": "Select delivery method"
+	},
+	"transferPurpose": {
+		"text": "Transfer Purpose",
+		"placeholder": "Enter purpose of transfer"
+	}
+}

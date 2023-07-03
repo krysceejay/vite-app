@@ -2,39 +2,41 @@ import moment from 'moment'
 import { ITransfer } from '../../../api/types/transfer-types'
 import { numberFormat } from '../../../utils/helper'
 import DetailsLink from '../../shared/DetailsLink'
+import useTranslate from '../../../hooks/useTranslate'
 
 interface TableProps {
   data?: ITransfer[]
 }
 
 export default function TransferTable({ data }: TableProps) {
+  const {t} = useTranslate()
   return (
     <table className="border-collapse w-full text-xs font-normal table-fixed">
       <thead className="border-y border-y-[#F5F6FA]">
         <tr className="text-left font-semibold [&>*]:p-4">
           <th>
-            <span>Transfer ID</span>
+            <span>{t('transferPage.table.head.transferId')}</span>
           </th>
           <th>
-            <span>Beneficiary</span>
+            <span>{t('transferPage.table.head.beneficiary')}</span>
           </th>
           <th className="hidden sm:table-cell">
-            <span>Payout Method</span>
+            <span>{t('transferPage.table.head.payoutMethod')}</span>
           </th>
           <th className="hidden sm:table-cell">
-            <span>Sent Amount</span>
+            <span>{t('transferPage.table.head.sentAmount')}</span>
           </th>
           <th className="hidden sm:table-cell">
-            <span>Payout Amount</span>
+            <span>{t('transferPage.table.head.payoutAmount')}</span>
           </th>
           <th className="hidden md:table-cell">
-            <span>Date</span>
+            <span>{t('transferPage.table.head.date')}</span>
           </th>
           <th className="hidden md:table-cell">
-            <span>Status</span>
+            <span>{t('transferPage.table.head.status')}</span>
           </th>
           <th>
-            <span>View</span>
+            <span>{t('transferPage.table.head.view')}</span>
           </th>
         </tr>
       </thead>
@@ -52,10 +54,10 @@ export default function TransferTable({ data }: TableProps) {
               <div className="bg-[#28A745] w-[6px] h-[6px] rounded-full" /> : 
               <div className="bg-[#EEB012] w-[6px] h-[6px] rounded-full" /> 
               }
-              <h3>{transfer.status}</h3>
+              <h3>{t(`transferPage.status.${transfer.status}`)}</h3>
             </td>
             <td className="p-4">
-              <DetailsLink link={`/transfers/${transfer.guid}`} text="Details" isTable={true} />
+              <DetailsLink link={`/transfers/${transfer.guid}`} text={t('transferPage.table.details')} isTable={true} />
             </td>
           </tr>
         )}

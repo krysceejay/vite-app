@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Outlet, Navigate, useLocation } from 'react-router-dom'
 
 import DashboardNav from '../ui/DashboardNav'
 import { stringToHslColor } from '../../utils/helper';
 import useAuth from '../../hooks/useAuth';
 import useLogout from '../../hooks/useLogout';
+import Language from '../shared/Language';
+import useTranslate from '../../hooks/useTranslate';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 
 export default function DashboardLayout() {
@@ -13,6 +16,18 @@ export default function DashboardLayout() {
   const [dropOpen, setDropOpen] = useState<boolean>(false)
 
   const { mutate: logOutUser } = useLogout()
+
+  const {t, i18n} = useTranslate()
+  const [lang, setLang] = useLocalStorage('lang', 'en')
+
+  useEffect(() => {
+    i18n.changeLanguage(lang)
+  }, [lang])
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {value} = e.target
+    setLang(value)
+  }
   
   if (!authUser) return <Navigate to="/" state={{from: location}} replace />
 
@@ -21,6 +36,7 @@ export default function DashboardLayout() {
       <DashboardNav />
       <main className="flex-1 pb-16">
         <nav className="sticky top-0 z-20 shadow-sm w-full bg-white flex items-center justify-end h-[72px] px-5">
+          <Language lang={lang} handleSelectChange={handleSelectChange} />
           <div className="flex items-center space-x-2.5 h-full py-6 px-4 border-l border-l-[#EFEFEF]">
             <div className="rounded-full w-7 h-7 overflow-hidden">
               {/* <img src="/asset/img/profilepix.png" alt="Profile Picture" className="object-cover h-7 w-7" /> */}
@@ -60,7 +76,7 @@ export default function DashboardLayout() {
                       <path fillRule="evenodd" d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z" clipRule="evenodd" />
                       <path fillRule="evenodd" d="M6 10a.75.75 0 01.75-.75h9.546l-1.048-.943a.75.75 0 111.004-1.114l2.5 2.25a.75.75 0 010 1.114l-2.5 2.25a.75.75 0 11-1.004-1.114l1.048-.943H6.75A.75.75 0 016 10z" clipRule="evenodd" />
                     </svg>
-                    <span className="cursor-pointer text-xs">Logout</span>
+                    <span className="cursor-pointer text-xs">{t('logout')}</span>
                   </li>
                 </ul>
               }
@@ -73,7 +89,7 @@ export default function DashboardLayout() {
         <footer className="ml-0 lg:ml-60 xl:ml-72">
           <div className="bg-transparent mx-4 md:mx-6 xl:mx-10 py-7 border-t border-[#E0E0E0]">
             <div className="text-xs">
-              By using this website, you accept our <Link to="/" className="text-[#009933]">Terms of Use</Link> and <Link to="/" className="text-[#009933]">Privacy Policy</Link>. Copyright &copy; {new Date().getFullYear()} Vargent Africa.
+              {t('term.warn')} <Link to="/" className="text-green-color">{t('term.use')}</Link> {t('and')} <Link to="/" className="text-green-color">{t('privacy')}</Link>. {t('copyright')} &copy; {new Date().getFullYear()} Vargent Africa.
             </div>
           </div>
         </footer>

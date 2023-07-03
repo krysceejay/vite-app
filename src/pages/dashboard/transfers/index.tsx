@@ -8,6 +8,7 @@ import TransferTable from '../../../components/ui/transfers/TransferTable'
 import { numberFormat } from '../../../utils/helper'
 import moment from 'moment'
 import {useSearchParams} from 'react-router-dom'
+import useTranslate from '../../../hooks/useTranslate'
 
 
 type CSVData = {
@@ -22,12 +23,13 @@ type CSVData = {
 
 export default function Transfers() {
   let csvData: CSVData[] = []
+  const {t} = useTranslate()
 
   const [searchParams, setSearchParams] = useSearchParams()
 
   const query = searchParams.get('query') || ''
   const page = searchParams.get('page') || '1'
-  const limit = searchParams.get('limit') || '1'
+  const limit = searchParams.get('limit') || '10'
   
   const ref = useRef<HTMLInputElement>(null)
 
@@ -91,7 +93,7 @@ export default function Transfers() {
 
   return (
     <section className="flex-grow">
-      <PageTopOne title="Transfers" buttonText="New Transfer" link="/transfers/new" hasBtn />
+      <PageTopOne title={t('transferPage.title')} buttonText={t('transferPage.newTransfer.title')} link="/transfers/new" hasBtn />
       <section className="mt-11">
         <div className="mt-5 bg-white rounded-md overflow-hidden">
           <div className="py-10 border-b border-b-[#F5F6FA] w-full">
@@ -106,7 +108,7 @@ export default function Transfers() {
                   name="query"
                   // onChange={handleOnchange}
                   // value={query}
-                  placeholder="Search Transfers"
+                  placeholder={t('transferPage.searchPlaceholder')}
                 />
                 {query &&
                 <div 
@@ -121,12 +123,12 @@ export default function Transfers() {
               <div
               onClick={() => handleClick()}
               className="border border-[#D7D7D7] border-l-0 w-20 h-9 rounded-r text-center text-xs flex justify-center items-center px-3 cursor-pointer">
-                Search
+                {t('button.search')}
               </div>
             </div>
           </div> 
           <div className="min-h-[400px]">
-            {data.length === 0 ? <div className="h-52 flex justify-center items-center">No transfer</div> :
+            {data.length === 0 ? <div className="h-52 flex justify-center items-center">{t('transferPage.noTransfer')}</div> :
             <Fragment>
               <div className="py-7 px-6 md:px-10">
                 <TransferTable data={data} />
@@ -135,7 +137,7 @@ export default function Transfers() {
                 <CSVLink 
                   filename={"transfers.csv"}
                   data={csvData}>
-                  <h3 className="text-green-color cursor-pointer text-xs py-2">Download as CSV</h3>
+                  <h3 className="text-green-color cursor-pointer text-xs py-2">{t('download.csv')}</h3>
                 </CSVLink>
                 {/* <Pagination /> */}
                 {pages > 1 &&
