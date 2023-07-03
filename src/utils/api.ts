@@ -62,4 +62,9 @@ export const uploadFile = async (url: string, post: object) => {
   return data
 }
 
+export const getDataNoCred = async (url: string) => {
+  const { data } = await api.get(url)
+  return data
+}
+
 export default api

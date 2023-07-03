@@ -1,4 +1,4 @@
-import { getData, postData, uploadFile } from "../utils/api";
+import { getData, getDataNoCred, postData, uploadFile } from "../utils/api";
 import { IAddKyc, IKyc, ISmileUpload } from "./types/kyc-types";
 
 export function addKycFile(input: IAddKyc): Promise<IKyc> {
@@ -11,6 +11,10 @@ export function getUserKyc(): Promise<IKyc[]> {
 
 export function checkUserKycVerified(): Promise<boolean> {
   return getData('/kyc/check/verified')
+}
+
+export function getSmileService() {
+  return getDataNoCred('https://api.smileidentity.com/v1/services')
 }
 
 export function uploadSmileId(input: ISmileUpload): Promise<IKyc> {
